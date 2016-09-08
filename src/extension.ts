@@ -21,6 +21,8 @@ export function activate(context: vscode.ExtensionContext) {
         return false;
       }
 
+      // TODO: handle search string consisting of only spaces
+
       // Search cdnjs api
       request(searchUrl + '&search=' + value, (err, res, body) => {
 
@@ -61,25 +63,37 @@ export function activate(context: vscode.ExtensionContext) {
           }
 
           // Request library versions
-          request(url + "/" + library, (err, res, body) => {
+          request(baseUrl + "/" + library.name, (err, res, body) => {
 
             // TODO: error handling
 
             body = JSON.parse(body);
             let assets = body.assets;
-            let currentVersion = body.version || null;
 
             // Build array of library versions
-            let pickItems = [];
+            let items = [];
             for (let asset of assets) {
-              pickItems.push(asset.version);
+
+              let item: vscode.QuickPickItem = {
+                label: asset.version,
+                files: asset.files,
+                version: asset.version
+              };
+              if (asset.version === library.currentVersion) {
+                item.description = "current version";
+              }
+
+              items.push(item);
             }
 
             // Show QuickPick of library versions
-            vscode.window.showQuickPick(pickItems, {
-              'placeHolder': "Pick a version"
-            }).then((version) => {
-              console.log(version);
+            vscode.window.showQuickPick(items, {
+              placeHolder: "Pick a version"
+            }).then((asset) => {
+
+              console.log(asset);
+
+              return true;
             });
 
           });
@@ -88,6 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       });
 
+      return true;
     });
 
 
