@@ -9,6 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   const baseUrl = 'https://api.cdnjs.com/libraries';
   const searchUrl = baseUrl + '?fields=version,description,homepage';
+  const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
 
   let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
 
@@ -76,17 +77,52 @@ export function activate(context: vscode.ExtensionContext) {
 
               // Add description if this is the current/latest/stable version
               if (asset.version === library.currentVersion) {
-                item.description = "current version";
+                item.description = 'current version';
               }
               items.push(item);
             }
 
-            // Show QuickPick of library versions
+            // Show QuickPick of versions
             vscode.window.showQuickPick(items, {
-              placeHolder: "Pick a version"
+              placeHolder: 'Choose a version'
             }).then((asset) => {
 
-              console.log(asset);
+              // Build array of asset files
+              let items = [];
+              for (let file of asset.files) {
+                items.push(file);
+              }
+
+              // Show QuickPick of asset files
+              vscode.window.showQuickPick(items, {
+                placeHolder: 'Choose a file to embed'
+              }).then((file) {
+                console.log(embedUrl + '/' + library.name + '/' + asset.version + '/' + file);
+
+                let items = [
+                  'Insert URL'
+                ];
+                switch (file.split('.').pop()) {
+                  case 'js':
+                    items.push('Insert <script> tag');
+                    break;
+
+                  case 'css':
+                    items.push('Insert <link> tag');
+
+                  default:
+                    break;
+                }
+
+                vscode.window.showQuickPick(items, {
+                  placeHolder: 'Choose an option'
+                }).then((value) => {
+                  console.log(value);
+
+                  return true;
+                });
+
+              });
 
               return true;
             });
