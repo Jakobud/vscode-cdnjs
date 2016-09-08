@@ -48,7 +48,8 @@ export function activate(context: vscode.ExtensionContext) {
 
         // Show QuickPick of search results
         vscode.window.showQuickPick(items, {
-          placeHolder: 'Choose a library (' + items.length + ' results)'
+          placeHolder: 'Choose a library (' + items.length + ' results)',
+          matchOnDescription: true
         }).then((library) => {
 
           // No library was chosen
