@@ -1,7 +1,7 @@
 {
   "name": "vscode-cdnjs",
   "displayName": "cdnjs",
-  "description": "",
+  "description": "Embed libraries from cdnjs.com in Visual Studio Code",
   "version": "0.1.0",
   "publisher": "JakeWilson",
   "engines": {
