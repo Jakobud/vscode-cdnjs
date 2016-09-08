@@ -7,7 +7,8 @@ import * as request from 'request';
 
 export function activate(context: vscode.ExtensionContext) {
 
-  const url = 'https://api.cdnjs.com/libraries';
+  const baseUrl = 'https://api.cdnjs.com/libraries';
+  const searchUrl = baseUrl + '?fields=version,description,homepage';
 
   let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
 
@@ -21,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       // Search cdnjs api
-      request(url + "?search=" + value, (err, res, body) => {
+      request(searchUrl + '&search=' + value, (err, res, body) => {
 
         // TODO: Need to add error handling here
         // for err, res.status != 200 and !body.results
