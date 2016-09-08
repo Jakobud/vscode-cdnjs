@@ -1,0 +1,30 @@
+{
+    "name": "vscode-cdnjs",
+    "displayName": "cdnjs",
+    "description": "",
+    "version": "0.1.0",
+    "publisher": "JakeWilson",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:cdnjs.cdnjs"
+    ],
+    "main": "./extension",
+    "contributes": {
+        "commands": [{
+            "command": "cdnjs.cdnjs",
+            "title": "cdnjs",
+            "description": "Embed scripts from cdnjs.com"
+        }]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "vscode": "^0.11.0"
+    }
+}
