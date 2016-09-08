@@ -13,18 +13,20 @@
   "activationEvents": [
     "onCommand:cdnjs.cdnjs"
   ],
-  "main": "./extension",
+  "main": "./out/src/extension",
   "contributes": {
     "commands": [{
       "command": "cdnjs.cdnjs",
-      "title": "cdnjs",
-      "description": "Embed scripts from cdnjs.com"
+      "title": "cdnjs"
     }]
   },
   "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
+    "typescript": "^1.8.5",
     "vscode": "^0.11.0"
   },
   "dependencies": {
