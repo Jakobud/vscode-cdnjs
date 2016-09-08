@@ -16,6 +16,9 @@ export function activate(context: vscode.ExtensionContext) {
     }).then((value) => {
 
       // TODO: Handle undefined value
+      if (typeof(value) === 'undefined') {
+        return false;
+      }
 
       // Search cdnjs api
       request(url + "?search=" + value, (err, res, body) => {
