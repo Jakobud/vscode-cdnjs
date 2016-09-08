@@ -35,17 +35,10 @@ export function activate(context: vscode.ExtensionContext) {
         let items = [];
         for (let result of results) {
 
-          // Build the detail string
-          let detail = result.description;
-          if (result.homepage) {
-            detail += ' (' + result.homepage + ')';
-          }
-
-          // Create QuickPickItem
+          // Create QuickPickItem for library
           let item: vscode.QuickPickItem = {
             label: result.name,
-            description: result.version,
-            detail: detail,
+            description: result.description,
             currentVersion: result.version,
             name: result.name
           };
@@ -74,15 +67,17 @@ export function activate(context: vscode.ExtensionContext) {
             let items = [];
             for (let asset of assets) {
 
+              // QuickPickItem for the library version
               let item: vscode.QuickPickItem = {
                 label: asset.version,
                 files: asset.files,
                 version: asset.version
               };
+
+              // Add description if this is the current/latest/stable version
               if (asset.version === library.currentVersion) {
                 item.description = "current version";
               }
-
               items.push(item);
             }
 
