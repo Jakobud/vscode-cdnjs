@@ -1,71 +1,87 @@
 var vscode = require('vscode');
 var request = require('request');
-var Promise = require('bluebird');
 
 function activate(context) {
 
-    // cdnjs.com api endpoint
-    var url = 'https://api.cdnjs.com/libraries';
+  // cdnjs.com api endpoint
+  var url = 'https://api.cdnjs.com/libraries';
 
-    var disposable = vscode.commands.registerCommand('cdnjs.cdnjs', function() {
+  var disposable = vscode.commands.registerCommand('cdnjs.cdnjs', function() {
 
-        var window = vscode.window;
+    var window = vscode.window;
 
-        // Show search box
-        window.showInputBox({
-                'placeHolder': 'Search for a library, for example: jquery'
+    // Show search box
+    window.showInputBox({
+        'placeHolder': 'Search for a library, for example: jquery'
+      })
+      .then(function(value) {
+
+        // TODO: Handle undefined value
+
+        // Search cdnjs api
+        request(url + '?search=' + value, function(err, res, body) {
+
+          // TODO: Need to add error handling here
+          // for err, res.status != 200 and !body.results
+
+          var results = JSON.parse(body).results;
+
+          // Build array of search result values
+          var pickItems = [];
+          for (var index in results) {
+            if (results.hasOwnProperty(index)) {
+              var element = results[index];
+              if (element.name) {
+                pickItems.push(element.name);
+              }
+            }
+          }
+
+          // Show QuickPick of search results
+          window.showQuickPick(pickItems, {
+              'placeHolder': "Results found: " + pickItems.length
             })
-            .then(function(value) {
+            .then(function(library) {
 
-                return new Promise(function(resolve, reject) {
+              // Request library versions
+              request(url + "/" + library, function(err, res, body) {
 
-                    // Search cdnjs api
-                    request(url + '?search=' + value, function(err, res, body) {
+                // TODO: error handling
 
-                        // TODO: Need to add error handling here
-                        // for err, res.status != 200 and !body.results
+                var body = JSON.parse(body);
+                var assets = body.assets;
+                var currentVersion = body.version || null;
 
-                        var results = JSON.parse(body).results;
-                        var pickItems = [];
+                console.log(currentVersion);
 
-                        // Sort through the results
-                        for (var index in results) {
-                            if (results.hasOwnProperty(index)) {
-                                var element = results[index];
-                                if (element.name) {
-                                    pickItems.push(element.name);
-                                }
-                            }
-                        }
-                        resolve(pickItems);
-                    })
-                })
-            })
-            .then(function(pickItems) {
+                // Build array of library versions
+                var pickItems = [];
+                for (var index in assets) {
+                  if (assets.hasOwnProperty(index)) {
+                    var element = assets[index];
+                    pickItems.push(element.version);
+                  }
+                }
 
-                // Show a QuickPickBox of the search results
-                return new Promise(function(resolve, reject) {
+                // Show QuickPick of library versions
+                window.showQuickPick(pickItems, {
+                    'placeHolder': "Pick a version"
+                  })
+                  .then(function(version) {
+                    console.log(version);
+                  });
 
-                    window.showQuickPick(pickItems, {
-                            'placeHolder': "Results found: " + pickItems.length
-                        })
-                        .then(function(value) {
-                            resolve(value);
-                        });
-                });
+              });
 
-            })
-            .then(function(value) {
-                console.log(value);
-            }).catch(function(e) {
-                // TODO: Add proper Promise rejection handling
-                console.log(e);
-            })
+            });
+
+        });
+      });
 
 
-    });
+  });
 
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 }
 exports.activate = activate;
 
