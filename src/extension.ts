@@ -9,10 +9,10 @@ export function activate(context: vscode.ExtensionContext) {
 
   const url = 'https://api.cdnjs.com/libraries';
 
-  let disposable = vscode.commands.registerCommand('cdnjs.cdnjs', () => {
+  let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
 
     vscode.window.showInputBox({
-      'placeHolder': 'Search for a script or library'
+      'placeHolder': 'Type in the name of a library, i.e. jquery'
     }).then((value) => {
 
       // TODO: Handle undefined value

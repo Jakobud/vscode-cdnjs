@@ -11,13 +11,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:cdnjs.cdnjs"
+    "onCommand:cdnjs.search"
   ],
   "main": "./out/src/extension",
   "contributes": {
     "commands": [{
-      "command": "cdnjs.cdnjs",
-      "title": "cdnjs"
+      "command": "cdnjs.search",
+      "title": "Search for libraries",
+      "category": "cdnjs"
     }]
   },
   "scripts": {
