@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
       'placeHolder': 'Type in the name of a library, i.e. jquery'
     }).then((value) => {
 
-      // TODO: Handle undefined value
+      // No search string was entered
       if (typeof(value) === 'undefined') {
         return false;
       }
@@ -29,44 +29,60 @@ export function activate(context: vscode.ExtensionContext) {
 
         let results = JSON.parse(body).results;
 
-        // Build array of search result values
-        let pickItems = [];
+        // Build array of libraries
+        let items = [];
         for (let result of results) {
-          pickItems.push(result.name);
+
+          // Build the detail string
+          let detail = result.description;
+          if (result.homepage) {
+            detail += ' (' + result.homepage + ')';
+          }
+
+          // Create QuickPickItem
+          let item: vscode.QuickPickItem = {
+            'label': result.name,
+            'description': result.version,
+            'detail': detail
+          };
+          items.push(item);
         }
 
         // Show QuickPick of search results
-        vscode.window.showQuickPick(pickItems, {
-            'placeHolder': "Results found: " + pickItems.length
-          })
-          .then((library) => {
+        vscode.window.showQuickPick(items, {
+          'placeHolder': 'Choose a library (' + items.length + ' results)'
+        }).then((library) => {
 
-            // Request library versions
-            request(url + "/" + library, (err, res, body) => {
+          // No library was chosen
+          if (typeof(library) === 'undefined') {
+            return false;
+          }
 
-              // TODO: error handling
+          // Request library versions
+          request(url + "/" + library, (err, res, body) => {
 
-              body = JSON.parse(body);
-              let assets = body.assets;
-              let currentVersion = body.version || null;
+            // TODO: error handling
 
-              // Build array of library versions
-              let pickItems = [];
-              for (let asset of assets) {
-                pickItems.push(asset.version);
-              }
+            body = JSON.parse(body);
+            let assets = body.assets;
+            let currentVersion = body.version || null;
 
-              // Show QuickPick of library versions
-              vscode.window.showQuickPick(pickItems, {
-                  'placeHolder': "Pick a version"
-                })
-                .then((version) => {
-                  console.log(version);
-                });
+            // Build array of library versions
+            let pickItems = [];
+            for (let asset of assets) {
+              pickItems.push(asset.version);
+            }
 
+            // Show QuickPick of library versions
+            vscode.window.showQuickPick(pickItems, {
+              'placeHolder': "Pick a version"
+            }).then((version) => {
+              console.log(version);
             });
 
           });
+
+        });
 
       });
 
