@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
 
     vscode.window.showInputBox({
-      'placeHolder': 'Type in the name of a library, i.e. jquery'
+      placeHolder: 'Type in the name of a library, i.e. jquery'
     }).then((value) => {
 
       // No search string was entered
@@ -41,16 +41,18 @@ export function activate(context: vscode.ExtensionContext) {
 
           // Create QuickPickItem
           let item: vscode.QuickPickItem = {
-            'label': result.name,
-            'description': result.version,
-            'detail': detail
+            label: result.name,
+            description: result.version,
+            detail: detail,
+            currentVersion: result.version,
+            name: result.name
           };
           items.push(item);
         }
 
         // Show QuickPick of search results
         vscode.window.showQuickPick(items, {
-          'placeHolder': 'Choose a library (' + items.length + ' results)'
+          placeHolder: 'Choose a library (' + items.length + ' results)'
         }).then((library) => {
 
           // No library was chosen
