@@ -1,5 +1,6 @@
 var vscode = require('vscode');
 var request = require('request');
+var Promise = require('bluebird');
 
 function activate(context) {
 
@@ -12,39 +13,54 @@ function activate(context) {
 
         // Show search box
         window.showInputBox({
-            'placeHolder': 'Search for a library, for example: jquery'
-        }).then(function(value) {
+                'placeHolder': 'Search for a library, for example: jquery'
+            })
+            .then(function(value) {
 
-            // Search the cdnjs api
-            request(url + '?search=' + value, function(err, res, body) {
+                return new Promise(function(resolve, reject) {
 
-                // TODO: Need to add error handling here
-                // for err, res.status != 200 and !body.results
+                    // Search cdnjs api
+                    request(url + '?search=' + value, function(err, res, body) {
 
-                var results = JSON.parse(body).results;
-                var pickItems = [];
+                        // TODO: Need to add error handling here
+                        // for err, res.status != 200 and !body.results
 
-                for (var index in results) {
-                    if (results.hasOwnProperty(index)) {
-                        var element = results[index];
-                        if (element.name) {
-                            pickItems.push(element.name);
+                        var results = JSON.parse(body).results;
+                        var pickItems = [];
+
+                        // Sort through the results
+                        for (var index in results) {
+                            if (results.hasOwnProperty(index)) {
+                                var element = results[index];
+                                if (element.name) {
+                                    pickItems.push(element.name);
+                                }
+                            }
                         }
-                    }
-                }
-
-                window.showQuickPick(pickItems, {
-                        'placeHolder': "Results found: " + results.length
+                        resolve(pickItems);
                     })
-                    .then(function(value) {
-                        console.log(value);
-                    });
+                })
+            })
+            .then(function(pickItems) {
 
+                // Show a QuickPickBox of the search results
+                return new Promise(function(resolve, reject) {
 
-            });
-        });
+                    window.showQuickPick(pickItems, {
+                            'placeHolder': "Results found: " + pickItems.length
+                        })
+                        .then(function(value) {
+                            resolve(value);
+                        });
+                });
 
-
+            })
+            .then(function(value) {
+                console.log(value);
+            }).catch(function(e) {
+                // TODO: Add proper Promise rejection handling
+                console.log(e);
+            })
 
 
     });
