@@ -133,7 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showQuickPick(items, {
                   placeHolder: 'Choose an option'
                 }).then((value) => {
-                  console.log(value);
+                  insertText(value.detail);
 
                   return true;
                 });
@@ -159,3 +159,24 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {}
+
+// Insert text into active document at cursor positions
+private function insertText(text) {
+
+  let textEditor = vscode.window.activeTextEditor;
+  // Get the active text document's uri
+  let uri = textEditor.document.uri;
+
+  // Create a new TextEdit for each selection
+  let edits = [];
+  for (let selection of textEditor.selections) {
+    edits.push(vscode.TextEdit.insert(selection.active, text);
+  }
+
+  // New WorkspaceEdit
+  let edit = new vscode.WorkspaceEdit();
+  edit.set(uri, edits);
+
+  // Applying the WorkspaceEdit
+  vscode.workspace.applyEdit(edit);
+}
