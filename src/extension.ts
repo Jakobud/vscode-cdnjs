@@ -5,6 +5,7 @@
 import * as vscode from 'vscode';
 import * as request from 'request';
 import * as copyPaste from 'copy-paste';
+import * as open from 'open';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -191,6 +192,15 @@ export function activate(context: vscode.ExtensionContext) {
                   default:
                     break;
                 }
+
+                // Open URL in browser
+                items.push({
+                  label: "Open URL in default browser",
+                  text: url,
+                  callback: function(text) {
+                    open(text);
+                  }
+                });
 
                 vscode.window.showQuickPick(items, {
                   placeHolder: 'Choose an option'
