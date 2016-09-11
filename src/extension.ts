@@ -92,6 +92,11 @@ export function activate(context: vscode.ExtensionContext) {
               placeHolder: 'Choose a version'
             }).then((asset) => {
 
+              // No asset was chosen
+              if (typeof(asset) === 'undefined') {
+                return false;
+              }
+
               // Build array of asset files
               let items = [];
               for (let file of asset.files) {
@@ -102,6 +107,11 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showQuickPick(items, {
                 placeHolder: 'Choose a file to embed'
               }).then((file) {
+
+                // No file was chosen
+                if (typeof(file) === 'undefined') {
+                  return false;
+                }
 
                 // Build the url for the file
                 let url = embedUrl + '/' + library.name + '/' + asset.version + '/' + file;
@@ -132,7 +142,13 @@ export function activate(context: vscode.ExtensionContext) {
 
                 vscode.window.showQuickPick(items, {
                   placeHolder: 'Choose an option'
-                }).then((value) => {
+                }).then((option) => {
+
+                  // No option was chosen
+                  if (typeof(option) === 'undefined') {
+                    return false;
+                  }
+
                   insertText(value.detail);
 
                   return true;
