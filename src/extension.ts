@@ -14,8 +14,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
 
-    return false;
-
     vscode.window.showInputBox({
       placeHolder: 'Type in the name of a library, i.e. jquery'
     }).then((value) => {
