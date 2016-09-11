@@ -24,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       // TODO: handle search string consisting of only spaces
 
+      // TODO: Update the status bar to indicate searching
+
       // Search cdnjs api
       request(searchUrl + '&search=' + value, (err, res, body) => {
 
@@ -56,6 +58,8 @@ export function activate(context: vscode.ExtensionContext) {
           if (typeof(library) === 'undefined') {
             return false;
           }
+
+          // TODO: Update the status bar to indicate searching
 
           // Request library versions
           request(baseUrl + "/" + library.name, (err, res, body) => {
