@@ -102,18 +102,29 @@ export function activate(context: vscode.ExtensionContext) {
               vscode.window.showQuickPick(items, {
                 placeHolder: 'Choose a file to embed'
               }).then((file) {
-                console.log(embedUrl + '/' + library.name + '/' + asset.version + '/' + file);
 
-                let items = [
-                  'Insert URL'
-                ];
+                // Build the url for the file
+                let url = embedUrl + '/' + library.name + '/' + asset.version + '/' + file;
+
+                let items = [];
+                items.push(vscode.QuickPickItem = {
+                  label: "Insert URL",
+                  detail: url
+                });
                 switch (file.split('.').pop()) {
                   case 'js':
-                    items.push('Insert <script> tag');
+                    items.push(vscode.QuickPickItem = {
+                      label: "Insert <script> tag",
+                      detail: '<script src="' + url + '"></script>'
+                    });
                     break;
 
                   case 'css':
-                    items.push('Insert <link> tag');
+                    items.push(vscode.QuickPickItem = {
+                      label: "Insert <link> tag",
+                      detail: '<link rel="stylesheet" href="' + url + '"/>'
+                    });
+                    break;
 
                   default:
                     break;
