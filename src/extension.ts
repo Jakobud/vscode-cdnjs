@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
         for (let result of results) {
 
           // Create QuickPickItem for library
-          let item: vscode.QuickPickItem = {
+          let item = {
             label: result.name,
             description: result.description,
             currentVersion: result.version,
@@ -74,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
             for (let asset of assets) {
 
               // QuickPickItem for the library version
-              let item: vscode.QuickPickItem = {
+              let item = {
                 label: asset.version,
                 files: asset.files,
                 version: asset.version
@@ -107,20 +107,20 @@ export function activate(context: vscode.ExtensionContext) {
                 let url = embedUrl + '/' + library.name + '/' + asset.version + '/' + file;
 
                 let items = [];
-                items.push(vscode.QuickPickItem = {
+                items.push({
                   label: "Insert URL",
                   detail: url
                 });
                 switch (file.split('.').pop()) {
                   case 'js':
-                    items.push(vscode.QuickPickItem = {
+                    items.push({
                       label: "Insert <script> tag",
                       detail: '<script src="' + url + '"></script>'
                     });
                     break;
 
                   case 'css':
-                    items.push(vscode.QuickPickItem = {
+                    items.push({
                       label: "Insert <link> tag",
                       detail: '<link rel="stylesheet" href="' + url + '"/>'
                     });
