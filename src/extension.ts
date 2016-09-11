@@ -149,7 +149,8 @@ export function activate(context: vscode.ExtensionContext) {
                     return false;
                   }
 
-                  insertText(value.detail);
+                  // Insert the string into document at cursor position(s)
+                  insertText(option.detail);
 
                   return true;
                 });
