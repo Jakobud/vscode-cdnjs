@@ -118,22 +118,73 @@ export function activate(context: vscode.ExtensionContext) {
                 let url = embedUrl + '/' + library.name + '/' + asset.version + '/' + file;
 
                 let items = [];
+
+                // Insert URL
                 items.push({
-                  label: "Insert URL",
-                  detail: url
+                  label: "Insert URL into document",
+                  detail: url,
+                  text: url,
+                  callback: function(text) {
+                    insertText(text);
+                  }
                 });
+
+                // Insert tag
                 switch (file.split('.').pop()) {
                   case 'js':
                     items.push({
-                      label: "Insert <script> tag",
-                      detail: '<script src="' + url + '"></script>'
+                      label: "Insert <script> tag into document",
+                      detail: '<script src="' + url + '"></script>',
+                      text: '<script src="' + url + '"></script>',
+                      callback: function(text) {
+                        insertText(text);
+                      }
                     });
                     break;
 
                   case 'css':
                     items.push({
-                      label: "Insert <link> tag",
-                      detail: '<link rel="stylesheet" href="' + url + '"/>'
+                      label: "Insert <link> tag into document",
+                      detail: '<link rel="stylesheet" href="' + url + '"/>',
+                      text: '<link rel="stylesheet" href="' + url + '"/>',
+                      callback: function(text) {
+                        insertText(text);
+                      }
+                    });
+                    break;
+
+                  default:
+                    break;
+                }
+
+                // Copy URL
+                items.push({
+                  label: "Copy URL to clipboard",
+                  text: url,
+                  callback: function(text) {
+                    copyPaste.copy(text);
+                  }
+                });
+
+                // Copy tag
+                switch (file.split('.').pop()) {
+                  case 'js':
+                    items.push({
+                      label: "Copy <script> tag to clipboard",
+                      text: '<script src="' + url + '"></script>',
+                      callback: function(text) {
+                        copyPaste.copy(text);
+                      }
+                    });
+                    break;
+
+                  case 'css':
+                    items.push({
+                      label: "Copy <link> tag to clipboard",
+                      text: '<link rel="stylesheet" href="' + url + '"/>',
+                      callback: function(text) {
+                        copyPaste.copy(text);
+                      }
                     });
                     break;
 
@@ -151,7 +202,7 @@ export function activate(context: vscode.ExtensionContext) {
                   }
 
                   // Insert the string into document at cursor position(s)
-                  insertText(option.detail);
+                  option.callback(option.text);
 
                   return true;
                 });
