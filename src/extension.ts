@@ -4,6 +4,7 @@
 
 import * as vscode from 'vscode';
 import * as request from 'request';
+import * as copyPaste from 'copy-paste';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -12,6 +13,8 @@ export function activate(context: vscode.ExtensionContext) {
   const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
 
   let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
+
+    return false;
 
     vscode.window.showInputBox({
       placeHolder: 'Type in the name of a library, i.e. jquery'
