@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
         return false;
       }
 
-      // TODO: handle search string consisting of only spaces
+      value = value.trim();
 
       // TODO: Update the status bar to indicate searching
 
@@ -120,42 +120,47 @@ export function activate(context: vscode.ExtensionContext) {
 
                 let items = [];
 
-                // Insert URL
-                items.push({
-                  label: 'Insert URL into document',
-                  detail: url,
-                  text: url,
-                  callback: function(text) {
-                    insertText(text);
+                // Only show Insert actions if there is an active TextEditor
+                if (vscode.window.activeTextEditor) {
+
+                  // Insert URL
+                  items.push({
+                    label: 'Insert URL into document',
+                    detail: url,
+                    text: url,
+                    callback: function(text) {
+                      insertText(text);
+                    }
+                  });
+
+                  // Insert tag
+                  switch (file.split('.').pop()) {
+                    case 'js':
+                      items.push({
+                        label: 'Insert <script> tag into document',
+                        detail: '<script src="' + url + '"></script>',
+                        text: '<script src="' + url + '"></script>',
+                        callback: function(text) {
+                          insertText(text);
+                        }
+                      });
+                      break;
+
+                    case 'css':
+                      items.push({
+                        label: 'Insert <link> tag into document',
+                        detail: '<link rel="stylesheet" href="' + url + '"/>',
+                        text: '<link rel="stylesheet" href="' + url + '"/>',
+                        callback: function(text) {
+                          insertText(text);
+                        }
+                      });
+                      break;
+
+                    default:
+                      break;
                   }
-                });
 
-                // Insert tag
-                switch (file.split('.').pop()) {
-                  case 'js':
-                    items.push({
-                      label: 'Insert <script> tag into document',
-                      detail: '<script src="' + url + '"></script>',
-                      text: '<script src="' + url + '"></script>',
-                      callback: function(text) {
-                        insertText(text);
-                      }
-                    });
-                    break;
-
-                  case 'css':
-                    items.push({
-                      label: 'Insert <link> tag into document',
-                      detail: '<link rel="stylesheet" href="' + url + '"/>',
-                      text: '<link rel="stylesheet" href="' + url + '"/>',
-                      callback: function(text) {
-                        insertText(text);
-                      }
-                    });
-                    break;
-
-                  default:
-                    break;
                 }
 
                 // Copy URL
@@ -249,6 +254,12 @@ export function deactivate() {}
 private function insertText(text) {
 
   let textEditor = vscode.window.activeTextEditor;
+
+  // Ignore if no active TextEditor
+  if (typeof(textEditor) === 'undefined') {
+    return false;
+  }
+
   // Get the active text document's uri
   let uri = textEditor.document.uri;
 
