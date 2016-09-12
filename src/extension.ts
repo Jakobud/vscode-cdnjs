@@ -163,7 +163,9 @@ export function activate(context: vscode.ExtensionContext) {
                   label: 'Copy URL to clipboard',
                   text: url,
                   callback: function(text) {
-                    copyPaste.copy(text);
+                    copyPaste.copy(text, function(){
+                      vscode.window.showInformationMessage('URL has been copied to the clipboard');
+                    });
                   }
                 });
 
@@ -174,7 +176,9 @@ export function activate(context: vscode.ExtensionContext) {
                       label: 'Copy <script> tag to clipboard',
                       text: '<script src="' + url + '"></script>',
                       callback: function(text) {
-                        copyPaste.copy(text);
+                        copyPaste.copy(text, function(){
+                          vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
+                        });
                       }
                     });
                     break;
@@ -184,7 +188,9 @@ export function activate(context: vscode.ExtensionContext) {
                       label: 'Copy <link> tag to clipboard',
                       text: '<link rel="stylesheet" href="' + url + '"/>',
                       callback: function(text) {
-                        copyPaste.copy(text);
+                        copyPaste.copy(text, function(){
+                          vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
+                        });
                       }
                     });
                     break;
