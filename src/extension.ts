@@ -122,7 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                 // Insert URL
                 items.push({
-                  label: "Insert URL into document",
+                  label: 'Insert URL into document',
                   detail: url,
                   text: url,
                   callback: function(text) {
@@ -134,7 +134,7 @@ export function activate(context: vscode.ExtensionContext) {
                 switch (file.split('.').pop()) {
                   case 'js':
                     items.push({
-                      label: "Insert <script> tag into document",
+                      label: 'Insert <script> tag into document',
                       detail: '<script src="' + url + '"></script>',
                       text: '<script src="' + url + '"></script>',
                       callback: function(text) {
@@ -145,7 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                   case 'css':
                     items.push({
-                      label: "Insert <link> tag into document",
+                      label: 'Insert <link> tag into document',
                       detail: '<link rel="stylesheet" href="' + url + '"/>',
                       text: '<link rel="stylesheet" href="' + url + '"/>',
                       callback: function(text) {
@@ -160,7 +160,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                 // Copy URL
                 items.push({
-                  label: "Copy URL to clipboard",
+                  label: 'Copy URL to clipboard',
                   text: url,
                   callback: function(text) {
                     copyPaste.copy(text);
@@ -171,7 +171,7 @@ export function activate(context: vscode.ExtensionContext) {
                 switch (file.split('.').pop()) {
                   case 'js':
                     items.push({
-                      label: "Copy <script> tag to clipboard",
+                      label: 'Copy <script> tag to clipboard',
                       text: '<script src="' + url + '"></script>',
                       callback: function(text) {
                         copyPaste.copy(text);
@@ -181,7 +181,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                   case 'css':
                     items.push({
-                      label: "Copy <link> tag to clipboard",
+                      label: 'Copy <link> tag to clipboard',
                       text: '<link rel="stylesheet" href="' + url + '"/>',
                       callback: function(text) {
                         copyPaste.copy(text);
@@ -195,7 +195,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                 // Open URL in browser
                 items.push({
-                  label: "Open URL in default browser",
+                  label: 'Open URL in default browser',
                   text: url,
                   callback: function(text) {
                     open(text);
