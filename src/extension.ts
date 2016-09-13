@@ -79,7 +79,8 @@ export function activate(context: vscode.ExtensionContext) {
               let item = {
                 label: asset.version,
                 files: asset.files,
-                version: asset.version
+                version: asset.version,
+                description: ''
               };
 
               // Add description if this is the current/latest/stable version
@@ -108,7 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
               // Show QuickPick of asset files
               vscode.window.showQuickPick(items, {
                 placeHolder: 'Choose a file to embed'
-              }).then((file) {
+              }).then((file) => {
 
                 // No file was chosen
                 if (typeof(file) === 'undefined') {
@@ -168,7 +169,7 @@ export function activate(context: vscode.ExtensionContext) {
                   label: 'Copy URL to clipboard',
                   text: url,
                   callback: function(text) {
-                    copyPaste.copy(text, function(){
+                    copyPaste.copy(text, function() {
                       vscode.window.showInformationMessage('URL has been copied to the clipboard');
                     });
                   }
@@ -181,7 +182,7 @@ export function activate(context: vscode.ExtensionContext) {
                       label: 'Copy <script> tag to clipboard',
                       text: '<script src="' + url + '"></script>',
                       callback: function(text) {
-                        copyPaste.copy(text, function(){
+                        copyPaste.copy(text, function() {
                           vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
                         });
                       }
@@ -193,7 +194,7 @@ export function activate(context: vscode.ExtensionContext) {
                       label: 'Copy <link> tag to clipboard',
                       text: '<link rel="stylesheet" href="' + url + '"/>',
                       callback: function(text) {
-                        copyPaste.copy(text, function(){
+                        copyPaste.copy(text, function() {
                           vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
                         });
                       }
@@ -251,7 +252,7 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 // Insert text into active document at cursor positions
-private function insertText(text) {
+function insertText(text) {
 
   let textEditor = vscode.window.activeTextEditor;
 
@@ -266,7 +267,7 @@ private function insertText(text) {
   // Create a new TextEdit for each selection
   let edits = [];
   for (let selection of textEditor.selections) {
-    edits.push(vscode.TextEdit.insert(selection.active, text);
+    edits.push(vscode.TextEdit.insert(selection.active, text));
   }
 
   // New WorkspaceEdit
