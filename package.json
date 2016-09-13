@@ -13,19 +13,17 @@
   "activationEvents": [
     "onCommand:cdnjs.search"
   ],
-  "main": "./out/src/extension",
+  "main": "./extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "cdnjs.search",
-        "title": "Search for libraries",
-        "category": "cdnjs"
-      }
-    ]
+    "commands": [{
+      "command": "cdnjs.search",
+      "title": "Search for libraries",
+      "category": "cdnjs"
+    }]
   },
   "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    // "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    // "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
