@@ -11,6 +11,38 @@ function activate(context) {
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
 
+  let search = () => {
+
+    return new Promise((resolve, reject) => {
+
+      vscode.window.showInputBox({
+        placeHolder: 'Search for a script or library. For example: jquery'
+      }).then((value) => {
+
+        // No search string was entered
+        if (typeof(value) === 'undefined') {
+          reject();
+        }
+
+        value = value.trim();
+
+        // TODO: Update the status bar to indicate searching
+
+        // Search cdnjs api
+        request(searchUrl + '&search=' + value, (err, res, body) => {
+
+          // TODO: Need to add error handling here
+          // for err, res.status != 200 and !body.results
+
+          resolve(JSON.parse(body).results);
+
+        });
+
+      });
+
+    });
+  }
+
   var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     vscode.window.showInputBox({
