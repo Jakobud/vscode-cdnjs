@@ -11,10 +11,9 @@ function activate(context) {
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
 
-  let search = () => {
+  let searchInput = () => {
 
     return new Promise((resolve, reject) => {
-
       vscode.window.showInputBox({
         placeHolder: 'Search for a script or library. For example: jquery'
       }).then((value) => {
@@ -25,14 +24,30 @@ function activate(context) {
         }
 
         value = value.trim();
+        resolve(value.trim());
+      });
+    });
+  }
+
+  let search = (term) => {
+
+    return new Promise((resolve, reject) => {
+
+      // TODO: Update the status bar to indicate searching
+
+      // Search cdnjs api
+      request(searchUrl + '&search=' + value, (err, res, body) => {
 
         // TODO: Update the status bar to indicate searching
 
-        // Search cdnjs api
-        request(searchUrl + '&search=' + value, (err, res, body) => {
+        // TODO: Need to add error handling here (Promise reject here)
+        // for err, res.status != 200 and !body.results
 
-          // TODO: Need to add error handling here
-          // for err, res.status != 200 and !body.results
+        resolve(JSON.parse(body).results);
+
+      });
+    });
+  }
 
           resolve(JSON.parse(body).results);
 
