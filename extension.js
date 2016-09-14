@@ -29,6 +29,7 @@ function activate(context) {
     });
   }
 
+  // Perform search on cdnjs.com and return JSON results
   let search = (term) => {
 
     return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ function activate(context) {
       // TODO: Update the status bar to indicate searching
 
       // Search cdnjs api
-      request(searchUrl + '&search=' + value, (err, res, body) => {
+      request(searchUrl + '&search=' + term, (err, res, body) => {
 
         // TODO: Update the status bar to indicate searching
 
