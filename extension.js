@@ -184,7 +184,11 @@ function activate(context) {
 
     return new Promise((resolve, reject) => {
 
-      // TODO: Add reject here for missing asset properties
+      // Reject if any chosen file properties are missing
+      if (!chosen.library || !chosen.version || !chosen.file) {
+        reject('Missing file asset parameters');
+        return false;
+      }
 
       // Build the url for the file
       let url = embedUrl + '/' + chosen.library + '/' + chosen.version + '/' + chosen.file;
