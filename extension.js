@@ -50,9 +50,29 @@ function activate(context) {
     });
   }
 
-          resolve(JSON.parse(body).results);
+  // Show picker of all libraries
+  let showLibraryPicker = (items) => {
 
-        });
+    return new Promise((resolve, reject) => {
+
+      // Show QuickPick of search results
+      vscode.window.showQuickPick(items, {
+        placeHolder: 'Choose a library (' + items.length + ' results)',
+        matchOnDescription: true
+      }).then(function(libraryName) {
+
+        // No library was chosen
+        if (typeof(libraryName) === 'undefined') {
+          reject();
+        }
+
+        resolve(libraryName);
+
+      });
+
+    });
+
+  }
 
       });
 
