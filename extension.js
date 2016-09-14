@@ -119,26 +119,26 @@ function activate(context) {
       // Show QuickPick of library versions
       vscode.window.showQuickPick(items, {
         placeHolder: 'Choose a version'
-      }).then(function(version) {
+      }).then(function(asset) {
 
         // No version was chosen
-        if (typeof(version) === 'undefined') {
+        if (typeof(asset) === 'undefined') {
           reject();
         }
 
-        resolve(version);
+        resolve(asset);
       });
     });
   }
 
   // Show library version file picker
-  let showFilePicker = (version) => {
+  let showFilePicker = (asset) => {
 
     return new Promise((resolve, reject) => {
 
       // Build array of files
       let items = [];
-      for (let file of version.files) {
+      for (let file of asset.files) {
         items.push(file);
       }
 
