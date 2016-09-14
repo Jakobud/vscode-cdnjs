@@ -74,6 +74,21 @@ function activate(context) {
 
   }
 
+  // Get library data from cdnjs
+  let getLibrary = (libraryName) => {
+
+    return new Promise((resolve, reject) => {
+
+      // TODO: Update the status bar to indicate searching
+
+      // Request library versions
+      request(baseUrl + "/" + libraryName, function(err, res, body) {
+
+        // TODO: Update the status bar to indicate searching
+
+        // TODO: error handling
+
+        resolve(JSON.parse(body));
       });
 
     });
