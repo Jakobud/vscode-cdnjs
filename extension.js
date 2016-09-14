@@ -1,15 +1,15 @@
 'use strict';
 
-var vscode = require('vscode');
-var request = require('request');
-var copyPaste = require('copy-paste');
-var open = require('open');
+const vscode = require('vscode');
+const request = require('request');
+const copyPaste = require('copy-paste');
+const open = require('open');
 
 function activate(context) {
 
-  var baseUrl = 'https://api.cdnjs.com/libraries';
-  var searchUrl = baseUrl + '?fields=version,description,homepage';
-  var embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
+  const baseUrl = 'https://api.cdnjs.com/libraries';
+  const searchUrl = baseUrl + '?fields=version,description,homepage';
+  const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
 
   var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
