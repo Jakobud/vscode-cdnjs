@@ -11,7 +11,8 @@ function activate(context) {
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
 
-  let searchInput = () => {
+  // Display search box and return input
+  let showSearchInput = () => {
 
     return new Promise((resolve, reject) => {
       vscode.window.showInputBox({
@@ -23,7 +24,6 @@ function activate(context) {
           reject();
         }
 
-        value = value.trim();
         resolve(value.trim());
       });
     });
