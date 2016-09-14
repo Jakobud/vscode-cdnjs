@@ -53,7 +53,21 @@ function activate(context) {
   }
 
   // Show picker of all libraries
-  let showLibraryPicker = (items) => {
+  let showLibraryPicker = (results) => {
+
+    // Build array of libraries
+    let items = [];
+    for (let result of results) {
+
+      // Create QuickPickItem for library
+      let item = {
+        label: result.name,
+        description: result.description,
+        currentVersion: result.version,
+        name: result.name
+      };
+      items.push(item);
+    }
 
     return new Promise((resolve, reject) => {
 
