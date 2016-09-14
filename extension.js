@@ -321,7 +321,7 @@ function activate(context) {
     });
   }
 
-  var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
+  let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     // The chosen file
     let chosen = {};
