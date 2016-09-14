@@ -323,233 +323,44 @@ function activate(context) {
 
   var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
-    vscode.window.showInputBox({
-      placeHolder: 'Search for a script or library. For example: jquery'
-    }).then(function(value) {
+    // The chosen file
+    let chosen = {};
 
-      // No search string was entered
-      if (typeof(value) === 'undefined') {
-        return false;
-      }
+    showSearchInput().then((value) => {
 
-      value = value.trim();
+      return search(value);
 
-      // TODO: Update the status bar to indicate searching
+    }).then((results) => {
 
-      // Search cdnjs api
-      request(searchUrl + '&search=' + value, function(err, res, body) {
+      return showLibraryPicker(results);
 
-        // TODO: Need to add error handling here
-        // for err, res.status != 200 and !body.results
+    }).then((library) => {
 
-        let results = JSON.parse(body).results;
+      chosen.library = library.name;
 
-        // Build array of libraries
-        let items = [];
-        for (let result of results) {
+      return getLibrary(library.name);
 
-          // Create QuickPickItem for library
-          let item = {
-            label: result.name,
-            description: result.description,
-            currentVersion: result.version,
-            name: result.name
-          };
-          items.push(item);
-        }
+    }).then((library) => {
 
-        // Show QuickPick of search results
-        vscode.window.showQuickPick(items, {
-          placeHolder: 'Choose a library (' + items.length + ' results)',
-          matchOnDescription: true
-        }).then(function(library) {
+      return showLibraryVersionPicker(library);
 
-          // No library was chosen
-          if (typeof(library) === 'undefined') {
-            return false;
-          }
+    }).then((asset) => {
 
-          // TODO: Update the status bar to indicate searching
+      chosen.version = asset.version;
 
-          // Request library versions
-          request(baseUrl + "/" + library.name, function(err, res, body) {
+      return showFilePicker(asset);
 
-            // TODO: error handling
+    }).then((file) => {
 
-            body = JSON.parse(body);
-            let assets = body.assets;
+      chosen.file = file;
 
-            // Build array of library versions
-            let items = [];
-            for (let asset of assets) {
+      return showActionPicker(chosen);
 
-              // QuickPickItem for the library version
-              let item = {
-                label: asset.version,
-                files: asset.files,
-                version: asset.version,
-                description: ''
-              };
+    }).catch((err) => {
 
-              // Add description if this is the current/latest/stable version
-              if (asset.version === library.currentVersion) {
-                item.description = 'current version';
-              }
-              items.push(item);
-            }
+      console.error(err);
 
-            // Show QuickPick of versions
-            vscode.window.showQuickPick(items, {
-              placeHolder: 'Choose a version'
-            }).then(function(asset) {
-
-              // No asset was chosen
-              if (typeof(asset) === 'undefined') {
-                return false;
-              }
-
-              // Build array of asset files
-              let items = [];
-              for (let file of asset.files) {
-                items.push(file);
-              }
-
-              // Show QuickPick of asset files
-              vscode.window.showQuickPick(items, {
-                placeHolder: 'Choose a file to embed'
-              }).then(function(file) {
-
-                // No file was chosen
-                if (typeof(file) === 'undefined') {
-                  return false;
-                }
-
-                // Build the url for the file
-                let url = embedUrl + '/' + library.name + '/' + asset.version + '/' + file;
-
-                let items = [];
-
-                // Only show Insert actions if there is an active TextEditor
-                if (vscode.window.activeTextEditor) {
-
-                  // Insert URL
-                  items.push({
-                    label: 'Insert URL into document',
-                    detail: url,
-                    text: url,
-                    callback: function(text) {
-                      insertText(text);
-                    }
-                  });
-
-                  // Insert tag
-                  switch (file.split('.').pop()) {
-                    case 'js':
-                      items.push({
-                        label: 'Insert <script> tag into document',
-                        detail: '<script src="' + url + '"></script>',
-                        text: '<script src="' + url + '"></script>',
-                        callback: function(text) {
-                          insertText(text);
-                        }
-                      });
-                      break;
-
-                    case 'css':
-                      items.push({
-                        label: 'Insert <link> tag into document',
-                        detail: '<link rel="stylesheet" href="' + url + '"/>',
-                        text: '<link rel="stylesheet" href="' + url + '"/>',
-                        callback: function(text) {
-                          insertText(text);
-                        }
-                      });
-                      break;
-
-                    default:
-                      break;
-                  }
-
-                }
-
-                // Copy URL
-                items.push({
-                  label: 'Copy URL to clipboard',
-                  text: url,
-                  callback: function(text) {
-                    copyPaste.copy(text, function() {
-                      vscode.window.showInformationMessage('URL has been copied to the clipboard');
-                    });
-                  }
-                });
-
-                // Copy tag
-                switch (file.split('.').pop()) {
-                  case 'js':
-                    items.push({
-                      label: 'Copy <script> tag to clipboard',
-                      text: '<script src="' + url + '"></script>',
-                      callback: function(text) {
-                        copyPaste.copy(text, function() {
-                          vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
-                        });
-                      }
-                    });
-                    break;
-
-                  case 'css':
-                    items.push({
-                      label: 'Copy <link> tag to clipboard',
-                      text: '<link rel="stylesheet" href="' + url + '"/>',
-                      callback: function(text) {
-                        copyPaste.copy(text, function() {
-                          vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
-                        });
-                      }
-                    });
-                    break;
-
-                  default:
-                    break;
-                }
-
-                // Open URL in browser
-                items.push({
-                  label: 'Open URL in default browser',
-                  text: url,
-                  callback: function(text) {
-                    open(text);
-                  }
-                });
-
-                vscode.window.showQuickPick(items, {
-                  placeHolder: 'Choose an option'
-                }).then(function(option) {
-
-                  // No option was chosen
-                  if (typeof(option) === 'undefined') {
-                    return false;
-                  }
-
-                  // Insert the string into document at cursor position(s)
-                  option.callback(option.text);
-
-                  return true;
-                });
-
-              });
-
-              return true;
-            });
-
-          });
-
-        });
-
-      });
-
-      return true;
-    });
+    })
 
   });
 }
