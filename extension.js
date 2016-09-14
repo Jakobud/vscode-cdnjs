@@ -19,12 +19,14 @@ function activate(context) {
         placeHolder: 'Search for a script or library. For example: jquery'
       }).then((value) => {
 
-        // No search string was entered
+        // No search string was specified
         if (typeof(value) === 'undefined') {
-          reject();
+          reject("No search string was specified");
+          return false;
         }
 
-        resolve(value.trim());
+        resolve(value);
+
       });
     });
   }
@@ -63,7 +65,8 @@ function activate(context) {
 
         // No library was chosen
         if (typeof(libraryName) === 'undefined') {
-          reject();
+          reject("No library was chosen");
+          return false;
         }
 
         resolve(libraryName);
@@ -123,7 +126,8 @@ function activate(context) {
 
         // No version was chosen
         if (typeof(asset) === 'undefined') {
-          reject();
+          reject("No library version was chosen");
+          return false;
         }
 
         resolve(asset);
@@ -149,7 +153,8 @@ function activate(context) {
 
         // No file was chosen
         if (typeof(file) === 'undefined') {
-          reject();
+          reject('No library file was chosen');
+          return false;
         }
 
         resolve(file);
