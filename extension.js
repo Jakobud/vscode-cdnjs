@@ -131,6 +131,35 @@ function activate(context) {
     });
   }
 
+  // Show library version file picker
+  let showFilePicker = (version) => {
+
+    return new Promise((resolve, reject) => {
+
+      // Build array of files
+      let items = [];
+      for (let file of version.files) {
+        items.push(file);
+      }
+
+      // Show QuickPick of asset files
+      vscode.window.showQuickPick(items, {
+        placeHolder: 'Choose a file to embed'
+      }).then(function(file) {
+
+        // No file was chosen
+        if (typeof(file) === 'undefined') {
+          reject();
+        }
+
+        resolve(file);
+      });
+
+
+    });
+
+  }
+
   var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     vscode.window.showInputBox({
