@@ -94,6 +94,43 @@ function activate(context) {
     });
   }
 
+  // Show library version picker
+  let showLibraryVersionPicker = (library) => {
+
+    return new Promise((resolve, reject) => {
+      // Build array of library versions
+      let items = [];
+      for (let asset of library.assets) {
+
+        // QuickPickItem for the library version
+        let item = {
+          label: asset.version,
+          files: asset.files,
+          version: asset.version
+        };
+
+        // Add description if this is the current/latest/stable version
+        if (asset.version === library.currentVersion) {
+          item.description = 'current version';
+        }
+        items.push(item);
+      }
+
+      // Show QuickPick of library versions
+      vscode.window.showQuickPick(items, {
+        placeHolder: 'Choose a version'
+      }).then(function(version) {
+
+        // No version was chosen
+        if (typeof(version) === 'undefined') {
+          reject();
+        }
+
+        resolve(version);
+      });
+    });
+  }
+
   var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     vscode.window.showInputBox({
