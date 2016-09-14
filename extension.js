@@ -160,6 +160,144 @@ function activate(context) {
 
   }
 
+  // Show file action picker
+  let showActionPicker = (chosen) => {
+
+    return new Promise((resolve, reject) => {
+
+      // TODO: Add reject here for missing asset properties
+
+      // Build the url for the file
+      let url = embedUrl + '/' + chosen.library + '/' + chosen.version + '/' + chosen.file;
+
+      // Arrays of actions
+      let actions = [];
+      let insertActions = [];
+      let clipboardActions = [];
+
+      // Determine file extension
+      let fileExtension = chosen.file.split('.').pop();
+      switch (fileExtension) {
+
+        case 'js':
+          // JavaScript
+
+          // Insert <script> tag into document action
+          if (vscode.window.activeTextEditor) {
+            insertActions.push({
+              label: 'Insert <script> tag into document',
+              detail: '<script src="' + url + '"></script>',
+              text: '<script src="' + url + '"></script>',
+              callback: function(text) {
+                insertText(text);
+              }
+            });
+          }
+
+          // Copy <script> tag to clipboard action
+          clipboardActions.push({
+            label: 'Copy <script> tag to clipboard',
+            text: '<script src="' + url + '"></script>',
+            callback: function(text) {
+              copyPaste.copy(text, function() {
+                vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
+              });
+            }
+          });
+
+          break;
+
+        case 'css':
+          // CSS
+
+          // Insert <link> tag into document action
+          if (vscode.window.activeTextEditor) {
+            insertActions.push({
+              label: 'Insert <link> tag into document',
+              detail: '<link rel="stylesheet" href="' + url + '"/>',
+              text: '<link rel="stylesheet" href="' + url + '"/>',
+              callback: function(text) {
+                insertText(text);
+              }
+            });
+          }
+
+          // Copy <link> tag to clipboard action
+          clipboardActions.push({
+            label: 'Copy <link> tag to clipboard',
+            text: '<link rel="stylesheet" href="' + url + '"/>',
+            callback: function(text) {
+              copyPaste.copy(text, function() {
+                vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
+              });
+            }
+          });
+
+          break;
+
+        default:
+          break;
+      }
+
+      // Insert URL into document action
+      if (vscode.window.activeTextEditor) {
+        actions.push({
+          label: 'Insert URL into document',
+          detail: url,
+          text: url,
+          callback: function(text) {
+            insertText(text);
+          }
+        });
+      }
+
+      // Add other insert actions
+      actions = actions.concat(insertActions);
+
+      // Copy URL to clipboard action
+      actions.push({
+        label: 'Copy URL to clipboard',
+        text: url,
+        callback: function(text) {
+          copyPaste.copy(text, function() {
+            vscode.window.showInformationMessage('URL has been copied to the clipboard');
+          });
+        }
+      });
+
+      // Add other clipboard actions
+      actions = actions.concat(clipboardActions);
+
+      // Open URL in browser action
+      actions.push({
+        label: 'Open URL in default browser',
+        text: url,
+        callback: function(text) {
+          open(text);
+        }
+      });
+
+      return new Promise((resolve, reject) => {
+        vscode.window.showQuickPick(actions, {
+          placeHolder: 'Choose an action'
+        }).then(function(action) {
+
+          // No action was chosen
+          if (typeof(action) === 'undefined') {
+            reject();
+          }
+
+          // Execute action callback
+          action.callback(action.text);
+
+          resolve();
+        });
+
+      });
+
+    });
+  }
+
   var disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     vscode.window.showInputBox({
