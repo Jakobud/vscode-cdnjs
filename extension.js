@@ -321,6 +321,34 @@ function activate(context) {
     });
   }
 
+  // Insert text into active document at cursor positions
+  let insertText = (text) => {
+
+    let textEditor = vscode.window.activeTextEditor;
+
+    // Ignore if no active TextEditor
+    if (typeof(textEditor) === 'undefined') {
+      return false;
+    }
+
+    // Get the active text document's uri
+    let uri = textEditor.document.uri;
+
+    // Create a new TextEdit for each selection
+    let edits = [];
+    for (let selection of textEditor.selections) {
+      edits.push(vscode.TextEdit.insert(selection.active, text));
+    }
+
+    // New WorkspaceEdit
+    let edit = new vscode.WorkspaceEdit();
+    edit.set(uri, edits);
+
+    // Applying the WorkspaceEdit
+    vscode.workspace.applyEdit(edit);
+
+    return true;
+  }
   let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     // The chosen file
@@ -368,30 +396,3 @@ exports.activate = activate;
 
 function deactivate() {}
 exports.deactivate = deactivate;
-
-// Insert text into active document at cursor positions
-function insertText(text) {
-
-  let textEditor = vscode.window.activeTextEditor;
-
-  // Ignore if no active TextEditor
-  if (typeof(textEditor) === 'undefined') {
-    return false;
-  }
-
-  // Get the active text document's uri
-  let uri = textEditor.document.uri;
-
-  // Create a new TextEdit for each selection
-  let edits = [];
-  for (let selection of textEditor.selections) {
-    edits.push(vscode.TextEdit.insert(selection.active, text));
-  }
-
-  // New WorkspaceEdit
-  let edit = new vscode.WorkspaceEdit();
-  edit.set(uri, edits);
-
-  // Applying the WorkspaceEdit
-  vscode.workspace.applyEdit(edit);
-}
