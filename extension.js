@@ -207,12 +207,12 @@ function activate(context) {
 
           // Insert <script> tag into document action
           if (vscode.window.activeTextEditor) {
+            let tag = '<script src="' + url + '"></script>';
             insertActions.push({
               label: 'Insert <script> tag into document',
-              detail: '<script src="' + url + '"></script>',
-              text: '<script src="' + url + '"></script>',
-              callback: function(text) {
-                insertText(text);
+              detail: tag,
+              callback: () => {
+                insertText(tag);
               }
             });
           }
@@ -220,11 +220,8 @@ function activate(context) {
           // Copy <script> tag to clipboard action
           clipboardActions.push({
             label: 'Copy <script> tag to clipboard',
-            text: '<script src="' + url + '"></script>',
-            callback: function(text) {
-              copyPaste.copy(text, function() {
-                vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
-              });
+            callback: () => {
+              copyJavaScript(url);
             }
           });
 
@@ -235,12 +232,12 @@ function activate(context) {
 
           // Insert <link> tag into document action
           if (vscode.window.activeTextEditor) {
+            let tag = '<link rel="stylesheet" href="' + url + '"/>';
             insertActions.push({
               label: 'Insert <link> tag into document',
-              detail: '<link rel="stylesheet" href="' + url + '"/>',
-              text: '<link rel="stylesheet" href="' + url + '"/>',
-              callback: function(text) {
-                insertText(text);
+              detail: tag,
+              callback: () => {
+                insertText(tag);
               }
             });
           }
@@ -248,11 +245,8 @@ function activate(context) {
           // Copy <link> tag to clipboard action
           clipboardActions.push({
             label: 'Copy <link> tag to clipboard',
-            text: '<link rel="stylesheet" href="' + url + '"/>',
-            callback: function(text) {
-              copyPaste.copy(text, function() {
-                vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
-              });
+            callback: () => {
+              copyCss(url);
             }
           });
 
@@ -267,9 +261,8 @@ function activate(context) {
         actions.push({
           label: 'Insert URL into document',
           detail: url,
-          text: url,
-          callback: function(text) {
-            insertText(text);
+          callback: () => {
+            insertText(url);
           }
         });
       }
@@ -280,11 +273,8 @@ function activate(context) {
       // Copy URL to clipboard action
       actions.push({
         label: 'Copy URL to clipboard',
-        text: url,
-        callback: function(text) {
-          copyPaste.copy(text, function() {
-            vscode.window.showInformationMessage('URL has been copied to the clipboard');
-          });
+        callback: () => {
+          copyUrl(url);
         }
       });
 
@@ -294,9 +284,8 @@ function activate(context) {
       // Open URL in browser action
       actions.push({
         label: 'Open URL in default browser',
-        text: url,
-        callback: function(text) {
-          open(text);
+        callback: () => {
+          open(url);
         }
       });
 
@@ -311,7 +300,7 @@ function activate(context) {
           }
 
           // Execute action callback
-          action.callback(action.text);
+          action.callback();
 
           resolve();
         });
