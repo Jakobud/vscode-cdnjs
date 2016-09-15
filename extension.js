@@ -21,7 +21,7 @@ function activate(context) {
 
         // No search string was specified
         if (typeof(value) === 'undefined') {
-          reject("No search string was specified");
+          reject('No search string was specified');
           return false;
         }
 
@@ -79,7 +79,7 @@ function activate(context) {
 
         // No library was chosen
         if (typeof(libraryName) === 'undefined') {
-          reject("No library was chosen");
+          reject('No library was chosen');
           return false;
         }
 
@@ -99,7 +99,7 @@ function activate(context) {
       // TODO: Update the status bar to indicate searching
 
       // Request library versions
-      request(baseUrl + "/" + libraryName, function(err, res, body) {
+      request(baseUrl + '/' + libraryName, function(err, res, body) {
 
         // TODO: Update the status bar to indicate searching
 
@@ -140,7 +140,7 @@ function activate(context) {
 
         // No version was chosen
         if (typeof(asset) === 'undefined') {
-          reject("No library version was chosen");
+          reject('No library version was chosen');
           return false;
         }
 
@@ -296,7 +296,7 @@ function activate(context) {
 
           // No action was chosen
           if (typeof(action) === 'undefined') {
-            reject("No action was chosen");
+            reject('No action was chosen');
             return false;
           }
 
