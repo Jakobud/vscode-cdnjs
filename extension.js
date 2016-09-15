@@ -349,6 +349,28 @@ function activate(context) {
 
     return true;
   }
+
+  // Copy URL to clipboard
+  let copyUrl = (url) => {
+    copyPaste.copy(url, () => {
+      vscode.window.showInformationMessage('URL has been copied to the clipboard');
+    });
+  }
+
+  // Copy script tag to clipboard
+  let copyJavaScript = (url) => {
+    copyPaste.copy('<script src="' + url + '"></script>', () => {
+      vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
+    });
+  }
+
+  // Copy link tag to clipboard
+  let copyCss = (url, message) => {
+    copyPaste.copy('<link rel="stylesheet" href="' + url + '"/>', () => {
+      vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
+    });
+  }
+
   let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     // The chosen file
