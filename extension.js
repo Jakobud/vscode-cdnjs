@@ -296,7 +296,8 @@ function activate(context) {
 
           // No action was chosen
           if (typeof(action) === 'undefined') {
-            reject();
+            reject("No action was chosen");
+            return false;
           }
 
           // Execute action callback
@@ -361,6 +362,10 @@ function activate(context) {
   }
 
   let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
+
+    // vscode.window.openTextDocument('untitled:c:/new.js');
+
+    // return false;
 
     // The chosen file
     let chosen = {};
