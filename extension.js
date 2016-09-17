@@ -371,11 +371,7 @@ let activate = (context) => {
     });
   }
 
-  let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
-
-    // vscode.window.openTextDocument('untitled:c:/new.js');
-
-    // return false;
+  let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
 
     // The chosen file
     let chosen = {};
@@ -420,5 +416,5 @@ let activate = (context) => {
 }
 exports.activate = activate;
 
-function deactivate() {}
+let deactivate = () => {}
 exports.deactivate = deactivate;
