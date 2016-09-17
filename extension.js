@@ -36,14 +36,10 @@ let activate = (context) => {
   // Perform search on cdnjs.com and return JSON results
   let search = (term) => {
 
-    return new Promise((resolve, reject) => {
-
-      // TODO: Update the status bar to indicate searching
+    let promise = new Promise((resolve, reject) => {
 
       // Search cdnjs api
       request(searchUrl + '&search=' + term, (err, res, body) => {
-
-        // TODO: Update the status bar to indicate searching
 
         // TODO: Need to add error handling here (Promise reject here)
         // for err, res.status != 200 and !body.results
@@ -52,6 +48,10 @@ let activate = (context) => {
 
       });
     });
+
+    // Update Status Bar Message
+    vscode.window.setStatusBarMessage("Searching cdnjs.com", promise);
+    return promise;
   }
 
   // Show picker of all libraries
@@ -98,14 +98,10 @@ let activate = (context) => {
   // Get library data from cdnjs
   let getLibrary = (libraryName) => {
 
-    return new Promise((resolve, reject) => {
-
-      // TODO: Update the status bar to indicate searching
+    let promise = new Promise((resolve, reject) => {
 
       // Request library versions
-      request(baseUrl + '/' + libraryName, function(err, res, body) {
-
-        // TODO: Update the status bar to indicate searching
+      request(baseUrl + '/' + libraryName, (err, res, body) => {
 
         // TODO: error handling
 
@@ -113,6 +109,10 @@ let activate = (context) => {
       });
 
     });
+
+    // Update Status Bar Message
+    vscode.window.setStatusBarMessage("Fetching data for " + libraryName, promise);
+    return promise;
   }
 
   // Show library version picker
