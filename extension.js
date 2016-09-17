@@ -41,10 +41,27 @@ let activate = (context) => {
       // Search cdnjs api
       request(searchUrl + '&search=' + term, (err, res, body) => {
 
-        // TODO: Need to add error handling here (Promise reject here)
-        // for err, res.status != 200 and !body.results
+        // Reject errors
+        if (err) {
+          reject(err);
+          return false;
+        }
 
-        resolve(JSON.parse(body).results);
+        // Reject non-200 status code responses
+        if (res.statusCode !== 200) {
+          reject(body);
+          return false;
+        }
+
+        body = JSON.parse(body);
+
+        // Display error message if no results were found
+        if (!body.results || body.results.length === 0) {
+          vscode.window.showErrorMessage("No libraries were found by the search term: " + term);
+          return false;
+        }
+
+        resolve(body.results);
 
       });
     });
@@ -103,9 +120,27 @@ let activate = (context) => {
       // Request library versions
       request(baseUrl + '/' + libraryName, (err, res, body) => {
 
-        // TODO: error handling
+        // Reject errors
+        if (err) {
+          reject(err);
+          return false;
+        }
 
-        resolve(JSON.parse(body));
+        // Reject non-200 status code responses
+        if (res.statusCode !== 200) {
+          reject(body);
+          return false;
+        }
+
+        body = JSON.parse(body);
+
+        // Display error message if no results were found
+        if (body.length === 0) {
+          vscode.window.showErrorMessage("The library " + libraryName + " was not found");
+          return false;
+        }
+
+        resolve(body);
       });
 
     });
