@@ -5,7 +5,7 @@ const request = require('request');
 const copyPaste = require('copy-paste');
 const open = require('open');
 
-function activate(context) {
+let activate = (context) => {
 
   const baseUrl = 'https://api.cdnjs.com/libraries';
   const searchUrl = baseUrl + '?fields=version,description,homepage';
@@ -27,6 +27,8 @@ function activate(context) {
 
         resolve(value);
 
+      }, (err) => {
+        reject(err);
       });
     });
   }
@@ -75,7 +77,7 @@ function activate(context) {
       vscode.window.showQuickPick(items, {
         placeHolder: 'Choose a library (' + items.length + ' results)',
         matchOnDescription: true
-      }).then(function(libraryName) {
+      }).then((libraryName) => {
 
         // No library was chosen
         if (typeof(libraryName) === 'undefined') {
@@ -85,6 +87,8 @@ function activate(context) {
 
         resolve(libraryName);
 
+      }, (err) => {
+        reject(err);
       });
 
     });
@@ -136,7 +140,7 @@ function activate(context) {
       // Show QuickPick of library versions
       vscode.window.showQuickPick(items, {
         placeHolder: 'Choose a version'
-      }).then(function(asset) {
+      }).then((asset) => {
 
         // No version was chosen
         if (typeof(asset) === 'undefined') {
@@ -145,6 +149,8 @@ function activate(context) {
         }
 
         resolve(asset);
+      }, (err) => {
+        reject(err);
       });
     });
   }
@@ -163,7 +169,7 @@ function activate(context) {
       // Show QuickPick of asset files
       vscode.window.showQuickPick(items, {
         placeHolder: 'Choose a file to embed'
-      }).then(function(file) {
+      }).then((file) => {
 
         // No file was chosen
         if (typeof(file) === 'undefined') {
@@ -172,6 +178,8 @@ function activate(context) {
         }
 
         resolve(file);
+      }, (err) => {
+        reject(err);
       });
 
 
@@ -292,7 +300,7 @@ function activate(context) {
       return new Promise((resolve, reject) => {
         vscode.window.showQuickPick(actions, {
           placeHolder: 'Choose an action'
-        }).then(function(action) {
+        }).then((action) => {
 
           // No action was chosen
           if (typeof(action) === 'undefined') {
@@ -304,6 +312,8 @@ function activate(context) {
           action.callback();
 
           resolve();
+        }, (err) => {
+          reject(err);
         });
 
       });
