@@ -162,7 +162,8 @@ let activate = (context) => {
         let item = {
           label: asset.version,
           files: asset.files,
-          version: asset.version
+          version: asset.version,
+          libraryName: library.name
         };
 
         // Add description if this is the current/latest/stable version
@@ -174,7 +175,7 @@ let activate = (context) => {
 
       // Show QuickPick of library versions
       vscode.window.showQuickPick(items, {
-        placeHolder: 'Choose a version'
+        placeHolder: library.name
       }).then((asset) => {
 
         // No version was chosen
@@ -203,7 +204,7 @@ let activate = (context) => {
 
       // Show QuickPick of asset files
       vscode.window.showQuickPick(items, {
-        placeHolder: 'Choose a file to embed'
+        placeHolder: asset.libraryName + "/" + asset.version + "/"
       }).then((file) => {
 
         // No file was chosen
@@ -253,7 +254,6 @@ let activate = (context) => {
             let tag = '<script src="' + url + '"></script>';
             insertActions.push({
               label: 'Insert <script> tag into document',
-              detail: tag,
               callback: () => {
                 insertText(tag);
               }
@@ -278,7 +278,6 @@ let activate = (context) => {
             let tag = '<link rel="stylesheet" href="' + url + '"/>';
             insertActions.push({
               label: 'Insert <link> tag into document',
-              detail: tag,
               callback: () => {
                 insertText(tag);
               }
@@ -303,7 +302,6 @@ let activate = (context) => {
       if (vscode.window.activeTextEditor) {
         actions.push({
           label: 'Insert URL into document',
-          detail: url,
           callback: () => {
             insertText(url);
           }
@@ -334,7 +332,7 @@ let activate = (context) => {
 
       return new Promise((resolve, reject) => {
         vscode.window.showQuickPick(actions, {
-          placeHolder: 'Choose an action'
+          placeHolder: url
         }).then((action) => {
 
           // No action was chosen
