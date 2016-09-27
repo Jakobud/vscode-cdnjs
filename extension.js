@@ -166,7 +166,7 @@ let activate = (context) => {
         };
 
         // Add description if this is the current/latest/stable version
-        if (asset.version === library.currentVersion) {
+        if (asset.version === library.version) {
           item.description = 'current version';
         }
         items.push(item);
