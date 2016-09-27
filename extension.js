@@ -406,7 +406,7 @@ let activate = (context) => {
     });
   }
 
-  let disposable = vscode.commands.registerCommand('cdnjs.search', () => {
+  let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     // The chosen file
     let chosen = {};
