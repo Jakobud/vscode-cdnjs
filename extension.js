@@ -380,6 +380,9 @@ let activate = (context) => {
     // Applying the WorkspaceEdit
     vscode.workspace.applyEdit(edit);
 
+    // Clear the selection
+    textEditor.selection = new vscode.Selection(textEditor.selection.anchor, textEditor.selection.end);
+
     return true;
   }
 
