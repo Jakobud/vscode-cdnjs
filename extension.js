@@ -381,7 +381,7 @@ let activate = (context) => {
     vscode.workspace.applyEdit(edit);
 
     // Clear the selection
-    textEditor.selection = new vscode.Selection(textEditor.selection.anchor, textEditor.selection.end);
+    textEditor.selection = new vscode.Selection(textEditor.selection.anchor, textEditor.selection.start);
 
     return true;
   }
