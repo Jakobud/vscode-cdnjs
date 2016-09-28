@@ -10,6 +10,16 @@ let activate = (context) => {
   const baseUrl = 'https://api.cdnjs.com/libraries';
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
+  const statusBarMessageTimeout = 5000; // milliseconds
+
+  // Set consistent status bar message using timeout with either promise or time in milliseconds
+  let statusMessage = (text, promise) => {
+    if (promise) {
+      vscode.window.setStatusBarMessage("cdnjs: " + text, promise);
+    } else {
+      vscode.window.setStatusBarMessage("cdnjs: " + text, statusBarMessageTimeout);
+    }
+  }
 
   // Display search box and return input
   let showSearchInput = () => {
@@ -67,7 +77,7 @@ let activate = (context) => {
     });
 
     // Update Status Bar Message
-    vscode.window.setStatusBarMessage("Searching cdnjs.com", promise);
+    statusMessage("Searching for " + term, promise);
     return promise;
   }
 
@@ -146,7 +156,7 @@ let activate = (context) => {
     });
 
     // Update Status Bar Message
-    vscode.window.setStatusBarMessage("Fetching data for " + libraryName, promise);
+    statusMessage("Fetching data for " + libraryName, promise);
     return promise;
   }
 
@@ -389,21 +399,24 @@ let activate = (context) => {
   // Copy URL to clipboard
   let copyUrl = (url) => {
     copyPaste.copy(url, () => {
-      vscode.window.showInformationMessage('URL has been copied to the clipboard');
+      // vscode.window.showInformationMessage('URL has been copied to the clipboard');
+      statusMessage("URL has been copied to the clipboard");
     });
   }
 
   // Copy script tag to clipboard
   let copyJavaScript = (url) => {
     copyPaste.copy('<script src="' + url + '"></script>', () => {
-      vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
+      // vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
+      statusMessage('<script> tag has been copied to the clipboard');
     });
   }
 
   // Copy link tag to clipboard
   let copyCss = (url, message) => {
     copyPaste.copy('<link rel="stylesheet" href="' + url + '"/>', () => {
-      vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
+      // vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
+      statusMessage('<link> tag has been copied to the clipboard');
     });
   }
 
