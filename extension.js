@@ -10,15 +10,19 @@ let activate = (context) => {
 
   const baseUrl = 'https://api.cdnjs.com/libraries';
   const searchUrl = baseUrl + '?fields=version,description,homepage';
-  const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
+  const embedUrl = 'cdnjs.cloudflare.com/ajax/libs';
   const statusBarMessageTimeout = 5000; // milliseconds
 
-  // Quote values
+  // Quote configuration values
   const quotes = {
     'single': "'",
     'double': '"'
   };
   const quoteDefault = "'";
+
+  // Protocol configuration values
+  const protocols = ['https://', 'http://', '//'];
+  const protocolDefault = 'https://';
 
   // Set consistent status bar message using timeout with either promise or time in milliseconds
   let statusMessage = (text, promise) => {
@@ -259,12 +263,18 @@ let activate = (context) => {
         return false;
       }
 
-      // Determine the quote style from configuration
+      // Configuration
       const config = vscode.workspace.getConfiguration('cdnjs');
+
+      // Determine the quote style from configuration
       const quote = quotes[config.get('quoteStyle', 'single')] || quoteDefault;
 
+      // Determine url protocol
+      const protocolConfig = config.get('protocol', protocolDefault);
+      const protocol = protocols.indexOf(protocolConfig) >= 0 ? protocolConfig : protocolDefault;
+
       // Build the url for the file
-      let url = embedUrl + '/' + chosen.library + '/' + chosen.version + '/' + chosen.file;
+      let url = protocol + embedUrl + '/' + chosen.library + '/' + chosen.version + '/' + chosen.file;
 
       // Arrays of actions
       let actions = [];

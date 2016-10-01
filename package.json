@@ -33,6 +33,11 @@
           "type": "string",
           "default": "single",
           "description": "Quote style for HTML tags. Possible values are 'single' or 'double'"
+        },
+        "cdnjs.protocol": {
+          "type": "string",
+          "default": "https://",
+          "description": "Protocol for urls in HTML tags. Possible values are 'https://', 'http://' or '//'"
         }
       }
     }
