@@ -99,11 +99,14 @@ let activate = (context) => {
       items.push(item);
     }
 
+    // Update status bar message
+    statusMessage('Found ' + items.length + ' libraries');
+
     return new Promise((resolve, reject) => {
 
       // Show QuickPick of search results
       vscode.window.showQuickPick(items, {
-        placeHolder: 'Choose a library (' + items.length + ' results)',
+        placeHolder: 'Choose a library (found' + items.length + ' libraries)',
         matchOnDescription: true
       }).then((libraryName) => {
 
@@ -184,6 +187,8 @@ let activate = (context) => {
         items.push(item);
       }
 
+      statusMessage('Found ' + items.length + ' versions');
+
       // Show QuickPick of library versions
       vscode.window.showQuickPick(items, {
         placeHolder: library.name
@@ -212,6 +217,8 @@ let activate = (context) => {
       for (let file of asset.files) {
         items.push(file);
       }
+
+      statusMessage('Found ' + items.length + ' files');
 
       // Show QuickPick of asset files
       vscode.window.showQuickPick(items, {
