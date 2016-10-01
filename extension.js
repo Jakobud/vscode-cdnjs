@@ -50,7 +50,7 @@ let activate = (context) => {
     let promise = new Promise((resolve, reject) => {
 
       // Search cdnjs api
-      request(searchUrl + '&search=' + term, (err, res, body) => {
+      request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
 
         // Reject errors
         if (err) {
