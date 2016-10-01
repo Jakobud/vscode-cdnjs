@@ -294,7 +294,7 @@ let activate = (context) => {
           clipboardActions.push({
             label: 'Copy <script> tag to clipboard',
             callback: () => {
-              copyJavaScript(url);
+              copy(tag, '<script> tag copied to the clipboard');
             }
           });
 
@@ -318,7 +318,7 @@ let activate = (context) => {
           clipboardActions.push({
             label: 'Copy <link> tag to clipboard',
             callback: () => {
-              copyCss(url);
+              copy(tag, '<link> tag copied to the clipboard');
             }
           });
 
@@ -345,7 +345,7 @@ let activate = (context) => {
       actions.push({
         label: 'Copy URL to clipboard',
         callback: () => {
-          copyUrl(url);
+          copy(url, 'URL copied to the clipboard');
         }
       });
 
@@ -418,31 +418,15 @@ let activate = (context) => {
         reject(err);
       });
 
-
     return true;
   }
 
-  // Copy URL to clipboard
-  let copyUrl = (url) => {
-    copyPaste.copy(url, () => {
-      // vscode.window.showInformationMessage('URL has been copied to the clipboard');
-      statusMessage("URL copied to the clipboard");
-    });
-  }
-
-  // Copy script tag to clipboard
-  let copyJavaScript = (url) => {
-    copyPaste.copy('<script src="' + url + '"></script>', () => {
-      // vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
-      statusMessage('<script> tag copied to the clipboard');
-    });
-  }
-
-  // Copy link tag to clipboard
-  let copyCss = (url, message) => {
-    copyPaste.copy('<link rel="stylesheet" href="' + url + '"/>', () => {
-      // vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
-      statusMessage('<link> tag copied to the clipboard');
+  // Copy text to clipboard and set statusBarMessage
+  let copy = (text, message) => {
+    copyPaste.copy(text, () => {
+      if (message) {
+        statusMessage(message);
+      }
     });
   }
 
