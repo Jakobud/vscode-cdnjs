@@ -11,17 +11,20 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:cdnjs.search"
+    "onCommand:cdnjs.search",
+    "onCommand:cdnjs.recentLibraries"
   ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "cdnjs.search",
-        "title": "Search for libraries",
-        "category": "cdnjs"
-      }
-    ]
+    "commands": [{
+      "command": "cdnjs.search",
+      "title": "Search for libraries",
+      "category": "cdnjs"
+    }, {
+      "command": "cdnjs.recentLibraries",
+      "title": "Recent libraries",
+      "category": "cdnjs"
+    }]
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install"

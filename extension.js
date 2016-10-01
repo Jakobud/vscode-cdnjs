@@ -434,7 +434,7 @@ let activate = (context) => {
     });
   }
 
-  let disposable = vscode.commands.registerCommand('cdnjs.search', function() {
+  let searchDisposable = vscode.commands.registerCommand('cdnjs.search', function() {
 
     // The chosen file
     let chosen = {};
@@ -475,6 +475,10 @@ let activate = (context) => {
 
     })
 
+  });
+
+  let recentLibrariesDisposable = vscode.commands.registerCommand('cdnjs.recentLibraries', function() {
+    console.log('recentLibraries');
   });
 }
 exports.activate = activate;
