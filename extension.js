@@ -414,7 +414,7 @@ let activate = (context) => {
   let copyUrl = (url) => {
     copyPaste.copy(url, () => {
       // vscode.window.showInformationMessage('URL has been copied to the clipboard');
-      statusMessage("URL has been copied to the clipboard");
+      statusMessage("URL copied to the clipboard");
     });
   }
 
@@ -422,7 +422,7 @@ let activate = (context) => {
   let copyJavaScript = (url) => {
     copyPaste.copy('<script src="' + url + '"></script>', () => {
       // vscode.window.showInformationMessage('<script> tag has been copied to the clipboard');
-      statusMessage('<script> tag has been copied to the clipboard');
+      statusMessage('<script> tag copied to the clipboard');
     });
   }
 
@@ -430,7 +430,7 @@ let activate = (context) => {
   let copyCss = (url, message) => {
     copyPaste.copy('<link rel="stylesheet" href="' + url + '"/>', () => {
       // vscode.window.showInformationMessage('<link> tag has been copied to the clipboard');
-      statusMessage('<link> tag has been copied to the clipboard');
+      statusMessage('<link> tag copied to the clipboard');
     });
   }
 
