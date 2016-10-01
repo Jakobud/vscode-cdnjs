@@ -267,10 +267,10 @@ let activate = (context) => {
       const config = vscode.workspace.getConfiguration('cdnjs');
 
       // Determine the quote style from configuration
-      const quote = quotes[config.get('quoteStyle', 'single')] || quoteDefault;
+      const quote = quotes[config.get('quoteStyle')] || quoteDefault;
 
       // Determine url protocol
-      const protocolConfig = config.get('protocol', protocolDefault);
+      const protocolConfig = config.get('protocol');
       const protocol = protocols.indexOf(protocolConfig) >= 0 ? protocolConfig : protocolDefault;
 
       // Build the url for the file
