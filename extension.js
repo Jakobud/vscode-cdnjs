@@ -60,6 +60,11 @@ let activate = (context) => {
 
     let promise = new Promise((resolve, reject) => {
 
+      // Ignore empty searches
+      if (!term.trim.length) {
+        reject('No search term provided');
+      }
+
       // Search cdnjs api
       request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
 
