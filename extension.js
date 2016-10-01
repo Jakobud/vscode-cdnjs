@@ -388,10 +388,16 @@ let activate = (context) => {
     edit.set(uri, edits);
 
     // Applying the WorkspaceEdit
-    vscode.workspace.applyEdit(edit);
+    vscode.workspace.applyEdit(edit)
+      .then(() => {
 
-    // Clear the selection
-    textEditor.selection = new vscode.Selection(textEditor.selection.anchor, textEditor.selection.start);
+        // Clear the selection
+        textEditor.selection = new vscode.Selection(textEditor.selection.anchor, textEditor.selection.end);
+
+      }, (err) => {
+        reject(err);
+      });
+
 
     return true;
   }
