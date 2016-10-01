@@ -61,7 +61,7 @@ let activate = (context) => {
     let promise = new Promise((resolve, reject) => {
 
       // Ignore empty searches
-      if (!term.trim.length) {
+      if (!term.trim().length) {
         reject('No search term provided');
       }
 
