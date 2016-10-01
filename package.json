@@ -24,7 +24,18 @@
       "command": "cdnjs.recentLibraries",
       "title": "Recent libraries",
       "category": "cdnjs"
-    }]
+    }],
+    "configuration": {
+      "type": "object",
+      "title": "cdnjs.com configuration",
+      "properties": {
+        "cdnjs.quoteStyle": {
+          "type": "string",
+          "default": "single",
+          "description": "Quote style for HTML tags. Possible values are 'single' or 'double'"
+        }
+      }
+    }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install"

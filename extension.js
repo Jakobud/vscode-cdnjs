@@ -13,6 +13,13 @@ let activate = (context) => {
   const embedUrl = 'https://cdnjs.cloudflare.com/ajax/libs';
   const statusBarMessageTimeout = 5000; // milliseconds
 
+  // Quote values
+  const quotes = {
+    'single': "'",
+    'double': '"'
+  };
+  const quoteDefault = "'";
+
   // Set consistent status bar message using timeout with either promise or time in milliseconds
   let statusMessage = (text, promise) => {
     if (promise) {
@@ -252,6 +259,10 @@ let activate = (context) => {
         return false;
       }
 
+      // Determine the quote style from configuration
+      const config = vscode.workspace.getConfiguration('cdnjs');
+      const quote = quotes[config.get('quoteStyle', 'single')] || quoteDefault;
+
       // Build the url for the file
       let url = embedUrl + '/' + chosen.library + '/' + chosen.version + '/' + chosen.file;
 
@@ -262,14 +273,15 @@ let activate = (context) => {
 
       // Determine file extension
       let fileExtension = chosen.file.split('.').pop();
+      let tag = "";
       switch (fileExtension) {
 
         case 'js':
           // JavaScript
+          tag = '<script src=' + quote + url + quote + '></script>';
 
           // Insert <script> tag into document action
           if (vscode.window.activeTextEditor) {
-            let tag = '<script src="' + url + '"></script>';
             insertActions.push({
               label: 'Insert <script> tag into document',
               callback: () => {
@@ -290,10 +302,10 @@ let activate = (context) => {
 
         case 'css':
           // CSS
+          tag = '<link rel=' + quote + 'stylesheet' + quote + ' href=' + quote + url + quote + '/>';
 
           // Insert <link> tag into document action
           if (vscode.window.activeTextEditor) {
-            let tag = '<link rel="stylesheet" href="' + url + '"/>';
             insertActions.push({
               label: 'Insert <link> tag into document',
               callback: () => {
