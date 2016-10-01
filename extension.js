@@ -392,7 +392,7 @@ let activate = (context) => {
       .then(() => {
 
         // Clear the selection
-        textEditor.selection = new vscode.Selection(textEditor.selection.anchor, textEditor.selection.end);
+        textEditor.selection = new vscode.Selection(textEditor.selection.end, textEditor.selection.end);
 
       }, (err) => {
         reject(err);
