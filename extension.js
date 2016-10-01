@@ -4,6 +4,7 @@ const vscode = require('vscode');
 const request = require('request');
 const copyPaste = require('copy-paste');
 const open = require('open');
+const Promise = require('bluebird');
 
 let activate = (context) => {
 
