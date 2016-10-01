@@ -24,6 +24,42 @@ let activate = (context) => {
   const protocols = ['https://', 'http://', '//'];
   const protocolDefault = 'https://';
 
+  class RecentLibraries {
+    constructor() {
+      this.libraries = context.globalState.get('recentLibraries', []);
+    }
+
+    add(newLibrary) {
+
+      // Remove library if it already exists in array
+      for (let index in this.libraries) {
+
+        // Match found, remove it from the array
+        if (newLibrary.libraryName === this.libraries[index].libraryName && newLibrary.version === this.libraries[index].version) {
+          this.libraries.splice(index, 1);
+          break;
+        }
+
+      }
+      // Add new library to the front of the array
+      this.libraries.unshift(newLibrary);
+
+      // Limit to 10 recent libraries
+      this.libraries = this.libraries.slice(0, 10);
+
+      return context.globalState.update('recentLibraries', this.libraries);
+    }
+
+    get() {
+      return this.libraries;
+    }
+
+    clear() {
+      return context.globalState.update('recentLibraries', undefined);
+    }
+  }
+  let recentLibraries = new RecentLibraries();
+
   // Set consistent status bar message using timeout with either promise or time in milliseconds
   let statusMessage = (text, promise) => {
     if (promise) {
@@ -472,6 +508,8 @@ let activate = (context) => {
 
       chosen.version = asset.version;
 
+      recentLibraries.add(asset);
+
       return showFilePicker(asset);
 
     }).then((file) => {
@@ -484,12 +522,64 @@ let activate = (context) => {
 
       console.error(err);
 
-    })
+    });
 
   });
 
   let recentLibrariesDisposable = vscode.commands.registerCommand('cdnjs.recentLibraries', function() {
-    console.log('recentLibraries');
+
+    let chosen = {};
+
+    new Promise((resolve, reject) => {
+
+      // Build array of recent libraries
+      let items = [];
+      for (let library of recentLibraries.get()) {
+        items.push({
+          label: library.libraryName + '/' + library.version,
+          asset: library
+        });
+      }
+
+      // Show quick pick of recent libraries
+      vscode.window.showQuickPick(items, {
+        placeHolder: 'Choose a recent library'
+      }).then((library) => {
+
+        // No recent library was chosen
+        if (typeof(library) === 'undefined') {
+          reject('No library was chosen');
+          return false;
+        }
+
+        resolve(library.asset);
+
+      }, (err) => {
+        reject(err);
+      });
+
+    }).then((asset) => {
+
+      // Set the chosen file's library and version'
+      chosen.library = asset.libraryName;
+      chosen.version = asset.version;
+
+      recentLibraries.add(asset);
+
+      return showFilePicker(asset);
+
+    }).then((file) => {
+
+      chosen.file = file;
+
+      return showActionPicker(chosen);
+
+    }).catch((err) => {
+
+      console.error(err);
+
+    });
+
   });
 }
 exports.activate = activate;
