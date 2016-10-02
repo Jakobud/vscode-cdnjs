@@ -1,19 +1,35 @@
 {
   "name": "vscode-cdnjs",
   "displayName": "cdnjs",
-  "description": "Embed libraries from cdnjs.com in Visual Studio Code",
+  "description": "Search and embed libraries from cdnjs.com in Visual Studio Code",
   "version": "0.1.0",
   "publisher": "JakeWilson",
+  "author": "Jake Wilson",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.0.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "cdn",
+    "cdnjs",
+    "content delivery network"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jakobud/vscode-cdnjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jakobud/vscode-cdnjs/issues"
+  },
+  "homepage": "https://github.com/Jakobud/vscode-cdnjs",
   "activationEvents": [
     "onCommand:cdnjs.search",
     "onCommand:cdnjs.recentLibraries"
   ],
+  "icon": "images/icon.svg",
   "main": "./extension.js",
   "contributes": {
     "commands": [{
@@ -42,18 +58,13 @@
       }
     }
   },
-  "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
   "devDependencies": {
-    "bluebird": "^3.4.6",
-    "typescript": "^1.8.5",
     "vscode": "^0.11.0"
   },
   "dependencies": {
     "copy-paste": "^1.3.0",
     "open": "0.0.5",
     "request": "^2.74.0",
-    "typings": "^1.3.3"
+    "bluebird": "^3.4.6"
   }
 }
