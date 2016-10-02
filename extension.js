@@ -55,7 +55,8 @@ let activate = (context) => {
     }
 
     clear() {
-      return context.globalState.update('recentLibraries', undefined);
+      this.libraries = [];
+      return context.globalState.update('recentLibraries', this.libraries);
     }
   }
   let recentLibraries = new RecentLibraries();
