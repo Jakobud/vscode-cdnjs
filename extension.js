@@ -5,6 +5,7 @@ const request = require('request');
 const copyPaste = require('copy-paste');
 const open = require('open');
 const Promise = require('bluebird');
+const RecentLibraries = require('./recentLibraries');
 
 let activate = (context) => {
 
@@ -27,47 +28,7 @@ let activate = (context) => {
   // Maximum Recent Libraries configuration values
   const maxRecentLibrariesDefault = 10;
 
-  class RecentLibraries {
-    constructor() {
-      this.libraries = context.globalState.get('recentLibraries', []);
-    }
-
-    add(newLibrary) {
-
-      // Remove library if it already exists in array
-      for (let index in this.libraries) {
-
-        // Match found, remove it from the array
-        if (newLibrary.libraryName === this.libraries[index].libraryName && newLibrary.version === this.libraries[index].version) {
-          this.libraries.splice(index, 1);
-          break;
-        }
-
-      }
-      // Add new library to the front of the array
-      this.libraries.unshift(newLibrary);
-
-      // Limit to maxium number of recent libraries according to configuration
-      const max = vscode.workspace.getConfiguration('cdnjs').get('maxRecentLibraries');
-      if (Number.isInteger(max) === true && max >= 1) {
-        this.libraries = this.libraries.slice(0, max);
-      } else {
-        this.libraries = this.libraries.slice(0, maxRecentLibrariesDefault);
-      }
-
-      return context.globalState.update('recentLibraries', this.libraries);
-    }
-
-    get() {
-      return this.libraries;
-    }
-
-    clear() {
-      this.libraries = [];
-      return context.globalState.update('recentLibraries', this.libraries);
-    }
-  }
-  let recentLibraries = new RecentLibraries();
+  let recentLibraries = new RecentLibraries(context, vscode.workspace);
 
   // Set consistent status bar message using timeout with either promise or time in milliseconds
   let statusMessage = (text, promise) => {
