@@ -24,6 +24,9 @@ let activate = (context) => {
   const protocols = ['https://', 'http://', '//'];
   const protocolDefault = 'https://';
 
+  // Maximum Recent Libraries configuration values
+  const maxRecentLibrariesDefault = 10;
+
   class RecentLibraries {
     constructor() {
       this.libraries = context.globalState.get('recentLibraries', []);
@@ -44,8 +47,13 @@ let activate = (context) => {
       // Add new library to the front of the array
       this.libraries.unshift(newLibrary);
 
-      // Limit to 10 recent libraries
-      this.libraries = this.libraries.slice(0, 10);
+      // Limit to maxium number of recent libraries according to configuration
+      const max = vscode.workspace.getConfiguration('cdnjs').get('maxRecentLibraries');
+      if (Number.isInteger(max) === true && max >= 1) {
+        this.libraries = this.libraries.slice(0, max);
+      } else {
+        this.libraries = this.libraries.slice(0, maxRecentLibrariesDefault);
+      }
 
       return context.globalState.update('recentLibraries', this.libraries);
     }

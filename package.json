@@ -54,6 +54,11 @@
           "type": "string",
           "default": "https://",
           "description": "Protocol for urls in HTML tags. Possible values are 'https://', 'http://' or '//'"
+        },
+        "cdnjs.maxRecentLibraries": {
+          "type": "integer",
+          "default": 10,
+          "description": "The maxmium number of Recent Libraries to save"
         }
       }
     }
