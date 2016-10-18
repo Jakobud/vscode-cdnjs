@@ -4,23 +4,24 @@ let RecentLibraries = function(context, workspace) {
 
   this.context = context;
   this.workspace = workspace;
-  this.libraries = this.context.globalState.get('recentLibraries', []);
+  this.key = 'recentLibraries';
+  this.libraries = this.context.globalState.get(this.key, []);
 
 }
 
-RecentLibraries.prototype.add = function(newLibrary) {
+RecentLibraries.prototype.add = function(library) {
   // Remove library if it already exists in array
   for (let index in this.libraries) {
 
     // Match found, remove it from the array
-    if (newLibrary.libraryName === this.libraries[index].libraryName && newLibrary.version === this.libraries[index].version) {
+    if (library.libraryName === this.libraries[index].libraryName && library.version === this.libraries[index].version) {
       this.libraries.splice(index, 1);
       break;
     }
 
   }
   // Add new library to the front of the array
-  this.libraries.unshift(newLibrary);
+  this.libraries.unshift(library);
 
   // Limit to maxium number of recent libraries according to configuration
   const max = this.workspace.getConfiguration('cdnjs').get('maxRecentLibraries');
@@ -30,7 +31,7 @@ RecentLibraries.prototype.add = function(newLibrary) {
     this.libraries = this.libraries.slice(0, maxRecentLibrariesDefault);
   }
 
-  return this.context.globalState.update('recentLibraries', this.libraries);
+  return this.context.globalState.update(this.key, this.libraries);
 }
 
 RecentLibraries.prototype.get = function() {
@@ -39,7 +40,7 @@ RecentLibraries.prototype.get = function() {
 
 RecentLibraries.prototype.clear = function() {
   this.libraries = [];
-  return this.context.globalState.update('recentLibraries', this.libraries);
+  return this.context.globalState.update(this.key, this.libraries);
 }
 
 module.exports = RecentLibraries;

@@ -5,7 +5,7 @@ const request = require('request');
 const copyPaste = require('copy-paste');
 const open = require('open');
 const Promise = require('bluebird');
-const RecentLibraries = require('./recentLibraries');
+const RecentLibraries = require('./RecentLibraries');
 
 let activate = (context) => {
 
