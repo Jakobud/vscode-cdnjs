@@ -289,8 +289,6 @@ let activate = (context) => {
 
       // Arrays of actions
       let actions = [];
-      let insertActions = [];
-      let clipboardActions = [];
 
       // Determine file extension
       let fileExtension = chosen.file.split('.').pop();
@@ -303,8 +301,8 @@ let activate = (context) => {
 
           // Insert <script> tag into document action
           if (vscode.window.activeTextEditor) {
-            insertActions.push({
-              label: 'Insert <script> tag into document',
+            actions.push({
+              label: '<script>: Insert into document',
               callback: () => {
                 insertText(tag);
               }
@@ -312,8 +310,8 @@ let activate = (context) => {
           }
 
           // Copy <script> tag to clipboard action
-          clipboardActions.push({
-            label: 'Copy <script> tag to clipboard',
+          actions.push({
+            label: '<script>: Copy to clipboard',
             callback: () => {
               copy(tag, '<script> tag copied to the clipboard');
             }
@@ -327,8 +325,8 @@ let activate = (context) => {
 
           // Insert <link> tag into document action
           if (vscode.window.activeTextEditor) {
-            insertActions.push({
-              label: 'Insert <link> tag into document',
+            actions.push({
+              label: '<link>: Insert into document',
               callback: () => {
                 insertText(tag);
               }
@@ -336,8 +334,8 @@ let activate = (context) => {
           }
 
           // Copy <link> tag to clipboard action
-          clipboardActions.push({
-            label: 'Copy <link> tag to clipboard',
+          actions.push({
+            label: '<link>: Copy to clipboard',
             callback: () => {
               copy(tag, '<link> tag copied to the clipboard');
             }
@@ -352,30 +350,24 @@ let activate = (context) => {
       // Insert URL into document action
       if (vscode.window.activeTextEditor) {
         actions.push({
-          label: 'Insert URL into document',
+          label: 'URL: Insert into document',
           callback: () => {
             insertText(url);
           }
         });
       }
 
-      // Add other insert actions
-      actions = actions.concat(insertActions);
-
       // Copy URL to clipboard action
       actions.push({
-        label: 'Copy URL to clipboard',
+        label: 'URL: Copy to clipboard',
         callback: () => {
           copy(url, 'URL copied to the clipboard');
         }
       });
 
-      // Add other clipboard actions
-      actions = actions.concat(clipboardActions);
-
       // Open URL in browser action
       actions.push({
-        label: 'Open URL in default browser',
+        label: 'URL: Open in browser',
         callback: () => {
           open(url);
         }
