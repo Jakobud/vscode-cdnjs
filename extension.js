@@ -48,7 +48,7 @@ let activate = (context) => {
       }).then((value) => {
 
         // No search string was specified
-        if (typeof(value) === 'undefined') {
+        if (typeof (value) === 'undefined') {
           reject('No search string was specified');
           return false;
         }
@@ -133,7 +133,7 @@ let activate = (context) => {
       }).then((libraryName) => {
 
         // No library was chosen
-        if (typeof(libraryName) === 'undefined') {
+        if (typeof (libraryName) === 'undefined') {
           reject('No library was chosen');
           return false;
         }
@@ -217,7 +217,7 @@ let activate = (context) => {
       }).then((asset) => {
 
         // No version was chosen
-        if (typeof(asset) === 'undefined') {
+        if (typeof (asset) === 'undefined') {
           reject('No library version was chosen');
           return false;
         }
@@ -248,7 +248,7 @@ let activate = (context) => {
       }).then((file) => {
 
         // No file was chosen
-        if (typeof(file) === 'undefined') {
+        if (typeof (file) === 'undefined') {
           reject('No library file was chosen');
           return false;
         }
@@ -379,7 +379,7 @@ let activate = (context) => {
         }).then((action) => {
 
           // No action was chosen
-          if (typeof(action) === 'undefined') {
+          if (typeof (action) === 'undefined') {
             reject('No action was chosen');
             return false;
           }
@@ -403,7 +403,7 @@ let activate = (context) => {
     let textEditor = vscode.window.activeTextEditor;
 
     // Ignore if no active TextEditor
-    if (typeof(textEditor) === 'undefined') {
+    if (typeof (textEditor) === 'undefined') {
       return false;
     }
 
@@ -509,7 +509,7 @@ let activate = (context) => {
       }).then((library) => {
 
         // No recent library was chosen
-        if (typeof(library) === 'undefined') {
+        if (typeof (library) === 'undefined') {
           reject('No library was chosen');
           return false;
         }
