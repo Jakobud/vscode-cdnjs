@@ -65,15 +65,17 @@ Cache.prototype.put = function(key, value, expiration) {
  */
 Cache.prototype.get = function(key, defaultValue) {
 
-  // Return default value
+  // If doesn't exist
   if (typeof(this.cache[key]) === 'undefined') {
 
+    // Return default value
     if (typeof(defaultValue) !== 'undefined') {
       return defaultValue;
     } else {
       return undefined;
     }
 
+    // Otherwise return the value
   } else {
     return this.cache[key].value;
   }
@@ -118,6 +120,16 @@ Cache.prototype.forget = function(key) {
  */
 Cache.prototype.keys = function() {
   return Object.keys(this.cache);
+}
+
+/**
+ * @name cache.all
+ * @desc Returns object of all cached items
+ * @function
+ * @return {object}
+ */
+Cache.prototype.all = function() {
+  return this.cache;
 }
 
 /**
