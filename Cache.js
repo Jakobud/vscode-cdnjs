@@ -2,7 +2,7 @@
 
 /**
  * @module Cache
- * @desc
+ * @desc A module for use in developing a Visual Studio Code extension. It allows an extension to cache values across sessions with optional expiration times using the ExtensionContext.globalState.
  * @class
  * @param {vscode.ExtensionContext} context - The Visual Studio Code extension context
  * @param {string} [namespace] - Optional namespace for cached items. Defaults to "cache"
@@ -143,10 +143,9 @@ Cache.prototype.getExpiration = function(key) {
 }
 
 /**
- * @name isExpired
+ * @name cache.isExpired
  * @desc Checks to see if cached item is expired
  * @function
- * @private
  * @param {object} item - Cached item object
  * @return {boolean}
  */
