@@ -8,7 +8,7 @@
  * @param {string} [namespace] - Optional namespace for cached items. Defaults to "cache"
  * @returns {Cache} The cache object
  */
-let Cache = function (context, namespace) {
+let Cache = function(context, namespace) {
   if (!context) {
     return undefined;
   }
@@ -24,18 +24,18 @@ let Cache = function (context, namespace) {
 }
 
 /**
- * @name cache.set
- * @desc Save something in the cache, with optional expiration
+ * @name cache.put
+ * @desc Store an item in the cache, with optional expiration
  * @function
  * @param {string} key - The unique key for the cached item
  * @param {string|number|object} value - The value to cache
  * @param {number} [expiration] - Optional expiration time in seconds
  * @returns {Thenable} Visual Studio Code Thenable (Promise)
  */
-Cache.prototype.set = function (key, value, expiration) {
+Cache.prototype.put = function(key, value, expiration) {
 
   // Parameter type checking
-  if (typeof (key) !== 'string' || typeof (value) === 'undefined') {
+  if (typeof(key) !== 'string' || typeof(value) === 'undefined') {
     return undefined; // Does this need to return a Thenable?
   }
 
@@ -63,12 +63,12 @@ Cache.prototype.set = function (key, value, expiration) {
  * @param {string|number|object} [defaultValue] - The optional default value to return if the cached item does not exist or is expired
  * @returns {string|number|object} Returns the cached value or optional defaultValue
  */
-Cache.prototype.get = function (key, defaultValue) {
+Cache.prototype.get = function(key, defaultValue) {
 
   // Return default value
-  if (typeof (this.cache[key]) === 'undefined') {
+  if (typeof(this.cache[key]) === 'undefined') {
 
-    if (typeof (defaultValue) !== 'undefined') {
+    if (typeof(defaultValue) !== 'undefined') {
       return defaultValue;
     } else {
       return undefined;
@@ -86,20 +86,20 @@ Cache.prototype.get = function (key, defaultValue) {
  * @param {string} key - The unique key for the cached item
  * @return {boolean}
  */
-Cache.prototype.has = function (key) {
-  return (typeof (this.cache[key]) !== 'undefined' && !this.isExpired(key));
+Cache.prototype.has = function(key) {
+  return (typeof(this.cache[key]) !== 'undefined' && !this.isExpired(key));
 }
 
 /**
- * @name cache.delete
- * @desc Deletes the specified key from the cache
+ * @name cache.forget
+ * @desc Removes an item from the cache
  * @function
  * @param {string} key - The unique key for the cached item
  * @returns {Thenable|false} Visual Studio Code Thenable (Promise) or false if key does not exist
  */
-Cache.prototype.delete = function (key) {
+Cache.prototype.forget = function(key) {
   // Does item exist?
-  if (typeof (this.cache[key]) === 'undefined') {
+  if (typeof(this.cache[key]) === 'undefined') {
     return false;
   }
 
@@ -116,17 +116,17 @@ Cache.prototype.delete = function (key) {
  * @function
  * @return {string[]}
  */
-Cache.prototype.keys = function () {
+Cache.prototype.keys = function() {
   return Object.keys(this.cache);
 }
 
 /**
- * @name cache.clear
+ * @name cache.flush
  * @desc Clears all items from the cache
  * @function
  * @return {boolean}
  */
-Cache.prototype.clear = function () {
+Cache.prototype.flush = function() {
   this.cache = {};
   return this.context.globalState.update(this.namespace, undefined);
 }
@@ -138,7 +138,7 @@ Cache.prototype.clear = function () {
  * @param {string} key - The unique key for the cached item
  * @return {number} Unix Timestamp in seconds
  */
-Cache.prototype.getExpiration = function (key) {
+Cache.prototype.getExpiration = function(key) {
   return this.has(key) ? this.cache[key].expiration : undefined;
 }
 
@@ -150,10 +150,10 @@ Cache.prototype.getExpiration = function (key) {
  * @param {object} item - Cached item object
  * @return {boolean}
  */
-Cache.prototype.isExpired = function (key) {
+Cache.prototype.isExpired = function(key) {
 
   // If key doesn't exist or it has no expiration
-  if (typeof (this.cache[key]) === 'undefined' || typeof (this.cache[key].expiration) === 'undefined') {
+  if (typeof(this.cache[key]) === 'undefined' || typeof(this.cache[key].expiration) === 'undefined') {
     return false;
   } else {
 
@@ -169,7 +169,7 @@ Cache.prototype.isExpired = function (key) {
  * @private
  * @return {number} Current Unix Timestamp in seconds
  */
-const now = function () {
+const now = function() {
   return Math.floor(Date.now() / 1000);
 }
 
