@@ -6,13 +6,15 @@ const copyPaste = require('copy-paste');
 const open = require('open');
 const Promise = require('bluebird');
 const RecentLibraries = require('./RecentLibraries');
+const Cache = require('./Cache');
 
 let activate = (context) => {
 
   const baseUrl = 'https://api.cdnjs.com/libraries';
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'cdnjs.cloudflare.com/ajax/libs';
-  const statusBarMessageTimeout = 5000; // milliseconds
+  const statusBarMessageTimeout = 5000; // 5 seconds
+  const cacheExpiration = 21600 // 6 hours
 
   // Quote configuration values
   const quotes = {
@@ -29,6 +31,10 @@ let activate = (context) => {
   const maxRecentLibrariesDefault = 10;
 
   let recentLibraries = new RecentLibraries(context, vscode.workspace);
+
+  // Cache interfaces
+  let searchCache = new Cache(context, 'search');
+  let libraryCache = new Cache(context, 'library');
 
   // Set consistent status bar message using timeout with either promise or time in milliseconds
   let statusMessage = (text, promise) => {
@@ -71,6 +77,12 @@ let activate = (context) => {
         reject('No search term provided');
       }
 
+      // Check the cache
+      if (searchCache.has(term)) {
+        resolve(searchCache.get(term));
+        return true;
+      }
+
       // Search cdnjs api
       request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
 
@@ -94,7 +106,13 @@ let activate = (context) => {
           return false;
         }
 
-        resolve(body.results);
+        // Save the result to cache and resolving the search result
+        searchCache.put(term, body.results, cacheExpiration)
+          .then(() => {
+            resolve(body.results);
+          }, (err) => {
+            reject(err);
+          });
 
       });
     });
