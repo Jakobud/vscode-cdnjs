@@ -56,8 +56,7 @@ let activate = (context) => {
 
         // No search string was specified
         if (typeof(value) === 'undefined') {
-          reject('No search string was specified');
-          return false;
+          return reject('No search string was specified');
         }
 
         resolve(value);
@@ -75,13 +74,12 @@ let activate = (context) => {
 
       // Ignore empty searches
       if (!term.trim().length) {
-        reject('No search term provided');
+        return reject('No search term provided');
       }
 
       // Check the cache
       if (searchCache.has(term)) {
-        resolve(searchCache.get(term));
-        return true;
+        return resolve(searchCache.get(term));
       }
 
       // Lazy load request
@@ -92,14 +90,12 @@ let activate = (context) => {
 
         // Reject errors
         if (err) {
-          reject(err);
-          return false;
+          return reject(err);
         }
 
         // Reject non-200 status code responses
         if (res.statusCode !== 200) {
-          reject(body);
-          return false;
+          return reject(body);
         }
 
         body = JSON.parse(body);
@@ -156,8 +152,7 @@ let activate = (context) => {
 
         // No library was chosen
         if (typeof(libraryName) === 'undefined') {
-          reject('No library was chosen');
-          return false;
+          return reject('No library was chosen');
         }
 
         resolve(libraryName);
@@ -183,14 +178,12 @@ let activate = (context) => {
 
         // Reject errors
         if (err) {
-          reject(err);
-          return false;
+          return reject(err);
         }
 
         // Reject non-200 status code responses
         if (res.statusCode !== 200) {
-          reject(body);
-          return false;
+          return reject(body);
         }
 
         body = JSON.parse(body);
@@ -243,8 +236,7 @@ let activate = (context) => {
 
         // No version was chosen
         if (typeof(asset) === 'undefined') {
-          reject('No library version was chosen');
-          return false;
+          return reject('No library version was chosen');
         }
 
         resolve(asset);
@@ -274,8 +266,7 @@ let activate = (context) => {
 
         // No file was chosen
         if (typeof(file) === 'undefined') {
-          reject('No library file was chosen');
-          return false;
+          return reject('No library file was chosen');
         }
 
         resolve(file);
@@ -295,8 +286,7 @@ let activate = (context) => {
 
       // Reject if any chosen file properties are missing
       if (!chosen.library || !chosen.version || !chosen.file) {
-        reject('Missing file asset parameters');
-        return false;
+        return reject('Missing file asset parameters');
       }
 
       // Configuration
@@ -408,8 +398,7 @@ let activate = (context) => {
 
           // No action was chosen
           if (typeof(action) === 'undefined') {
-            reject('No action was chosen');
-            return false;
+            return reject('No action was chosen');
           }
 
           // Execute action callback
@@ -541,8 +530,7 @@ let activate = (context) => {
 
         // No recent library was chosen
         if (typeof(library) === 'undefined') {
-          reject('No library was chosen');
-          return false;
+          return reject('No library was chosen');
         }
 
         resolve(library.asset);
