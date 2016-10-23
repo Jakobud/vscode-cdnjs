@@ -24,12 +24,9 @@ RecentLibraries.prototype.add = function(library) {
   this.libraries.unshift(library);
 
   // Limit to maxium number of recent libraries according to configuration
-  const max = this.workspace.getConfiguration('cdnjs').get('maxRecentLibraries');
-  if (Number.isInteger(max) === true && max >= 1) {
-    this.libraries = this.libraries.slice(0, max);
-  } else {
-    this.libraries = this.libraries.slice(0, maxRecentLibrariesDefault);
-  }
+  let max = this.workspace.getConfiguration('cdnjs').get('maxRecentLibraries');
+  max = (Number.isInteger(max) === true && max >= 1) ? max : maxRecentLibrariesDefault;
+  this.libraries = this.libraries.slice(0, max);
 
   return this.context.globalState.update(this.key, this.libraries);
 }
