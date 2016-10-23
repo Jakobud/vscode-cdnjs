@@ -32,15 +32,18 @@
   "icon": "images/icon.svg",
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "cdnjs.search",
-      "title": "Search for libraries",
-      "category": "cdnjs"
-    }, {
-      "command": "cdnjs.recentLibraries",
-      "title": "Recent libraries",
-      "category": "cdnjs"
-    }],
+    "commands": [
+      {
+        "command": "cdnjs.search",
+        "title": "Search for libraries",
+        "category": "cdnjs"
+      },
+      {
+        "command": "cdnjs.recentLibraries",
+        "title": "Recent libraries",
+        "category": "cdnjs"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "cdnjs.com configuration",
