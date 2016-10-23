@@ -62,7 +62,7 @@
         },
         "cdnjs.cacheTime": {
           "type": "integer",
-          "default":21600,
+          "default": 21600,
           "description": "The length of time (in seconds) to cache library and search results"
         }
       }
