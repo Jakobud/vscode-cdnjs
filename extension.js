@@ -530,6 +530,20 @@ let activate = (context) => {
 
   let recentLibrariesDisposable = vscode.commands.registerCommand('cdnjs.recentLibraries', () => {
 
+    // No Recent Libraries found
+    if (recentLibraries.get().length >= 1) {
+
+      // Offer search instead
+      return vscode.window.showInformationMessage("No Recent Libraries. Do you want to search instead?", 'Yes')
+      .then((value)=>{
+        if (value === 'Yes') {
+          vscode.commands.executeCommand('cdnjs.search');
+        }
+      }, (err) => {
+        console.error(err);
+      });
+    }
+
     let chosen = {};
 
     new Promise((resolve, reject) => {
