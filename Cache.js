@@ -136,7 +136,7 @@ Cache.prototype.all = function() {
  * @name cache.flush
  * @desc Clears all items from the cache
  * @function
- * @return {boolean}
+ * @returns {Thenable} Visual Studio Code Thenable (Promise)
  */
 Cache.prototype.flush = function() {
   this.cache = {};
