@@ -14,7 +14,7 @@ let activate = (context) => {
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'cdnjs.cloudflare.com/ajax/libs';
   const statusBarMessageTimeout = 5000; // 5 seconds
-  const cacheExpiration = 21600 // 6 hours
+  const cacheTimeDefault = 21600 // 6 hours
 
   // Quote configuration values
   const quotes = {
@@ -106,8 +106,12 @@ let activate = (context) => {
           return false;
         }
 
+        // Fetch the catch time setting
+        let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
+        cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
+
         // Save the result to cache and resolving the search result
-        searchCache.put(term, body.results, cacheExpiration)
+        searchCache.put(term, body.results, cacheTime)
           .then(() => {
             resolve(body.results);
           }, (err) => {
@@ -170,6 +174,11 @@ let activate = (context) => {
 
     let promise = new Promise((resolve, reject) => {
 
+      // Check the cache
+      if (libraryCache.has(libraryName)) {
+        return resolve(libraryCache.get(libraryName));
+      }
+
       // Lazy load request
       request = require('request');
 
@@ -194,7 +203,18 @@ let activate = (context) => {
           return false;
         }
 
-        resolve(body);
+        // Fetch the catch time setting
+        let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
+        cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
+
+        // Save the result to cache and resolving the search result
+        libraryCache.put(libraryName, body, cacheTime)
+          .then(() => {
+            resolve(body);
+          }, (err) => {
+            reject(err);
+          });
+
       });
 
     });
