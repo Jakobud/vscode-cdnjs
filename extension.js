@@ -596,6 +596,18 @@ let activate = (context) => {
     });
 
   });
+
+  let clearCacheDisposable = vscode.commands.registerCommand('cdnjs.clearCache', () => {
+
+    // Clear the search cache
+    searchCache.flush();
+
+    // Clear the library cache
+    libraryCache.flush();
+
+    statusMessage("Cache has been cleared")
+
+  });
 }
 exports.activate = activate;
 

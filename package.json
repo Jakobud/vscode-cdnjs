@@ -40,6 +40,10 @@
       "command": "cdnjs.recentLibraries",
       "title": "Recent libraries",
       "category": "cdnjs"
+    }, {
+      "command": "cdnjs.clearCache",
+      "title": "Clear cache",
+      "category": "cdnjs"
     }],
     "configuration": {
       "type": "object",
