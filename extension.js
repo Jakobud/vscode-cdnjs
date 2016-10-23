@@ -1,9 +1,9 @@
 'use strict';
 
 const vscode = require('vscode');
-const request = require('request');
-const copyPaste = require('copy-paste');
-const open = require('open');
+let request = null;
+let copyPaste = null;
+let open = null;
 const Promise = require('bluebird');
 const RecentLibraries = require('./RecentLibraries');
 const Cache = require('./Cache');
@@ -83,6 +83,9 @@ let activate = (context) => {
         resolve(searchCache.get(term));
         return true;
       }
+
+      // Lazy load request
+      request = require('request');
 
       // Search cdnjs api
       request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
@@ -171,6 +174,9 @@ let activate = (context) => {
   let getLibrary = (libraryName) => {
 
     let promise = new Promise((resolve, reject) => {
+
+      // Lazy load request
+      request = require('request');
 
       // Request library versions
       request(baseUrl + '/' + libraryName, (err, res, body) => {
@@ -388,6 +394,9 @@ let activate = (context) => {
       actions.push({
         label: 'URL: Open in browser',
         callback: () => {
+          // Lazy load open
+          open = require('open');
+
           open(url);
         }
       });
@@ -455,6 +464,9 @@ let activate = (context) => {
 
   // Copy text to clipboard and set statusBarMessage
   let copy = (text, message) => {
+    // Lazy load copy-paste
+    copyPaste = require('copy-paste');
+
     copyPaste.copy(text, () => {
       if (message) {
         statusMessage(message);
