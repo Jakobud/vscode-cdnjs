@@ -4,6 +4,7 @@ const vscode = require('vscode');
 let request = null;
 let copyPaste = null;
 let open = null;
+const got = require('got');
 const Promise = require('bluebird');
 const RecentLibraries = require('./RecentLibraries');
 const Cache = require('./Cache');
@@ -55,7 +56,7 @@ let activate = (context) => {
       }).then((value) => {
 
         // No search string was specified
-        if (typeof(value) === 'undefined') {
+        if (typeof (value) === 'undefined') {
           return reject('No search string was specified');
         }
 
@@ -85,40 +86,48 @@ let activate = (context) => {
       // Lazy load request
       request = require('request');
 
-      // Search cdnjs api
-      request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
-
-        // Reject errors
-        if (err) {
-          return reject(err);
-        }
-
-        // Reject non-200 status code responses
-        if (res.statusCode !== 200) {
-          return reject(body);
-        }
-
-        body = JSON.parse(body);
-
-        // Display error message if no results were found
-        if (!body.results || body.results.length === 0) {
-          vscode.window.showErrorMessage("No libraries were found by the search term: " + term);
-          return false;
-        }
-
-        // Fetch the catch time setting
-        let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
-        cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
-
-        // Save the result to cache and resolving the search result
-        searchCache.put(term, body.results, cacheTime)
-          .then(() => {
-            resolve(body.results);
-          }, (err) => {
-            reject(err);
-          });
-
+      got(searchUrl + '&search=' + term.trim()).then((response) => {
+        console.log('success');
+        console.log(response.body);
+      }).catch((err) => {
+        console.log('error');
+        console.error(err);
       });
+
+      // Search cdnjs api
+      // request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
+
+      //   // Reject errors
+      //   if (err) {
+      //     return reject(err);
+      //   }
+
+      //   // Reject non-200 status code responses
+      //   if (res.statusCode !== 200) {
+      //     return reject(body);
+      //   }
+
+      //   body = JSON.parse(body);
+
+      //   // Display error message if no results were found
+      //   if (!body.results || body.results.length === 0) {
+      //     vscode.window.showErrorMessage("No libraries were found by the search term: " + term);
+      //     return false;
+      //   }
+
+      //   // Fetch the catch time setting
+      //   let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
+      //   cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
+
+      //   // Save the result to cache and resolving the search result
+      //   searchCache.put(term, body.results, cacheTime)
+      //     .then(() => {
+      //       resolve(body.results);
+      //     }, (err) => {
+      //       reject(err);
+      //     });
+
+      // });
     });
 
     // Update Status Bar Message
@@ -155,7 +164,7 @@ let activate = (context) => {
       }).then((libraryName) => {
 
         // No library was chosen
-        if (typeof(libraryName) === 'undefined') {
+        if (typeof (libraryName) === 'undefined') {
           return reject('No library was chosen');
         }
 
@@ -255,7 +264,7 @@ let activate = (context) => {
       }).then((asset) => {
 
         // No version was chosen
-        if (typeof(asset) === 'undefined') {
+        if (typeof (asset) === 'undefined') {
           return reject('No library version was chosen');
         }
 
@@ -285,7 +294,7 @@ let activate = (context) => {
       }).then((file) => {
 
         // No file was chosen
-        if (typeof(file) === 'undefined') {
+        if (typeof (file) === 'undefined') {
           return reject('No library file was chosen');
         }
 
@@ -417,7 +426,7 @@ let activate = (context) => {
         }).then((action) => {
 
           // No action was chosen
-          if (typeof(action) === 'undefined') {
+          if (typeof (action) === 'undefined') {
             return reject('No action was chosen');
           }
 
@@ -440,7 +449,7 @@ let activate = (context) => {
     let textEditor = vscode.window.activeTextEditor;
 
     // Ignore if no active TextEditor
-    if (typeof(textEditor) === 'undefined') {
+    if (typeof (textEditor) === 'undefined') {
       return false;
     }
 
@@ -535,13 +544,13 @@ let activate = (context) => {
 
       // Offer search instead
       return vscode.window.showInformationMessage("No Recent Libraries. Do you want to search instead?", 'Yes')
-      .then((value)=>{
-        if (value === 'Yes') {
-          vscode.commands.executeCommand('cdnjs.search');
-        }
-      }, (err) => {
-        console.error(err);
-      });
+        .then((value) => {
+          if (value === 'Yes') {
+            vscode.commands.executeCommand('cdnjs.search');
+          }
+        }, (err) => {
+          console.error(err);
+        });
     }
 
     let chosen = {};
@@ -563,7 +572,7 @@ let activate = (context) => {
       }).then((library) => {
 
         // No recent library was chosen
-        if (typeof(library) === 'undefined') {
+        if (typeof (library) === 'undefined') {
           return reject('No library was chosen');
         }
 
