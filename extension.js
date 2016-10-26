@@ -1,10 +1,9 @@
 'use strict';
 
 const vscode = require('vscode');
-let request = null;
 let copyPaste = null;
 let open = null;
-const got = require('got');
+let got = null;
 const Promise = require('bluebird');
 const RecentLibraries = require('./RecentLibraries');
 const Cache = require('./Cache');
@@ -14,6 +13,7 @@ let activate = (context) => {
   const baseUrl = 'https://api.cdnjs.com/libraries';
   const searchUrl = baseUrl + '?fields=version,description,homepage';
   const embedUrl = 'cdnjs.cloudflare.com/ajax/libs';
+  const httpRequestTimeout = 5000; // 5 seconds
   const statusBarMessageTimeout = 5000; // 5 seconds
   const cacheTimeDefault = 21600 // 6 hours
 
@@ -71,10 +71,12 @@ let activate = (context) => {
   // Perform search on cdnjs.com and return JSON results
   let search = (term) => {
 
+    term = term.trim();
+
     let promise = new Promise((resolve, reject) => {
 
       // Ignore empty searches
-      if (!term.trim().length) {
+      if (!term.length) {
         return reject('No search term provided');
       }
 
@@ -83,57 +85,60 @@ let activate = (context) => {
         return resolve(searchCache.get(term));
       }
 
-      // Lazy load request
-      request = require('request');
+      // Lazy load got
+      got = require('got');
 
-      got(searchUrl + '&search=' + term.trim()).then((response) => {
-        console.log('success');
-        console.log(response.body);
+      // Search for libraries
+      got(searchUrl + '&search=' + term, {
+        json: true,
+        timeout: httpRequestTimeout
+      }).then((res) => {
+
+        // Reject non-200 status code responses
+        if (res.statusCode !== 200) {
+          return reject(res.body);
+        }
+
+        const body = res.body;
+
+        // Display error message if no results were found
+        if (!body.results || body.results.length === 0) {
+          vscode.window.showErrorMessage(term + ": No libraries found");
+          return false;
+        }
+
+        // Fetch the cache time setting
+        let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
+        cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
+
+        // Save the result to cache and resolve the search result
+        searchCache.put(term, body.results, cacheTime)
+          .then(() => {
+
+            // Search results
+            resolve(body.results);
+
+          }, (err) => {
+
+            // searchCache.put error
+            reject(err);
+
+          });
+
       }).catch((err) => {
-        console.log('error');
-        console.error(err);
+
+        // got http request error
+        reject(err);
+
       });
 
-      // Search cdnjs api
-      // request(searchUrl + '&search=' + term.trim(), (err, res, body) => {
-
-      //   // Reject errors
-      //   if (err) {
-      //     return reject(err);
-      //   }
-
-      //   // Reject non-200 status code responses
-      //   if (res.statusCode !== 200) {
-      //     return reject(body);
-      //   }
-
-      //   body = JSON.parse(body);
-
-      //   // Display error message if no results were found
-      //   if (!body.results || body.results.length === 0) {
-      //     vscode.window.showErrorMessage("No libraries were found by the search term: " + term);
-      //     return false;
-      //   }
-
-      //   // Fetch the catch time setting
-      //   let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
-      //   cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
-
-      //   // Save the result to cache and resolving the search result
-      //   searchCache.put(term, body.results, cacheTime)
-      //     .then(() => {
-      //       resolve(body.results);
-      //     }, (err) => {
-      //       reject(err);
-      //     });
-
-      // });
     });
 
     // Update Status Bar Message
-    statusMessage("Searching for " + term, promise);
+    statusMessage("Searching cdnjs.com for " + term, promise);
     return promise;
-  }
+
+  };
 
   // Show picker of all libraries
   let showLibraryPicker = (results) => {
@@ -159,7 +164,7 @@ let activate = (context) => {
 
       // Show QuickPick of search results
       vscode.window.showQuickPick(items, {
-        placeHolder: 'Choose a library (found' + items.length + ' libraries)',
+        placeHolder: 'Choose a library (found ' + items.length + ' libraries)',
         matchOnDescription: true
       }).then((libraryName) => {
 
@@ -188,23 +193,21 @@ let activate = (context) => {
         return resolve(libraryCache.get(libraryName));
       }
 
-      // Lazy load request
-      request = require('request');
+      // Lazy load got
+      got = require('got');
 
       // Request library versions
-      request(baseUrl + '/' + libraryName, (err, res, body) => {
-
-        // Reject errors
-        if (err) {
-          return reject(err);
-        }
+      got(baseUrl + '/' + libraryName, {
+        json: true,
+        timeout: httpRequestTimeout
+      }).then((res) => {
 
         // Reject non-200 status code responses
         if (res.statusCode !== 200) {
-          return reject(body);
+          return reject(res.body);
         }
 
-        body = JSON.parse(body);
+        const body = res.body;
 
         // Display error message if no results were found
         if (body.length === 0) {
@@ -219,9 +222,15 @@ let activate = (context) => {
         // Save the result to cache and resolving the search result
         libraryCache.put(libraryName, body, cacheTime)
           .then(() => {
+
+            // Library results
             resolve(body);
+
           }, (err) => {
+
+            // libraryCache.put error
             reject(err);
+
           });
 
       });
