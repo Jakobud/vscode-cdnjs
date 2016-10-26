@@ -2,7 +2,7 @@
   "name": "vscode-cdnjs",
   "displayName": "cdnjs",
   "description": "Search and embed libraries from cdnjs.com in Visual Studio Code",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "publisher": "JakeWilson",
   "author": "Jake Wilson",
   "license": "MIT",
@@ -27,24 +27,29 @@
   "homepage": "https://github.com/Jakobud/vscode-cdnjs",
   "activationEvents": [
     "onCommand:cdnjs.search",
-    "onCommand:cdnjs.recentLibraries"
+    "onCommand:cdnjs.recentLibraries",
+    "onCommand:cdnjs.clearCache"
   ],
   "icon": "images/icon.svg",
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "cdnjs.search",
-      "title": "Search for libraries",
-      "category": "cdnjs"
-    }, {
-      "command": "cdnjs.recentLibraries",
-      "title": "Recent libraries",
-      "category": "cdnjs"
-    }, {
-      "command": "cdnjs.clearCache",
-      "title": "Clear cache",
-      "category": "cdnjs"
-    }],
+    "commands": [
+      {
+        "command": "cdnjs.search",
+        "title": "Search for libraries",
+        "category": "cdnjs"
+      },
+      {
+        "command": "cdnjs.recentLibraries",
+        "title": "Recent libraries",
+        "category": "cdnjs"
+      },
+      {
+        "command": "cdnjs.clearCache",
+        "title": "Clear cache",
+        "category": "cdnjs"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "cdnjs.com configuration",
@@ -79,6 +84,6 @@
     "copy-paste": "^1.3.0",
     "got": "^6.5.0",
     "open": "0.0.5",
-    "request": "^2.74.0",
     "bluebird": "^3.4.6"
-}  }
+  }
+}
