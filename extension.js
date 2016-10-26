@@ -549,7 +549,7 @@ let activate = (context) => {
   let recentLibrariesDisposable = vscode.commands.registerCommand('cdnjs.recentLibraries', () => {
 
     // No Recent Libraries found
-    if (recentLibraries.get().length >= 1) {
+    if (recentLibraries.get().length < 1) {
 
       // Offer search instead
       return vscode.window.showInformationMessage("No Recent Libraries. Do you want to search instead?", 'Yes')
