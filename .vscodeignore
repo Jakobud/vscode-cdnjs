@@ -7,3 +7,5 @@ src/**
 .gitignore
 tsconfig.json
 images/cdnjs.ai
+images/search-example.gif
+images/recent-libraries-example.gif
