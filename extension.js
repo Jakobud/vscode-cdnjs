@@ -56,7 +56,7 @@ let activate = (context) => {
       }).then((value) => {
 
         // No search string was specified
-        if (typeof (value) === 'undefined') {
+        if (typeof(value) === 'undefined') {
           return reject('No search string was specified');
         }
 
@@ -169,7 +169,7 @@ let activate = (context) => {
       }).then((libraryName) => {
 
         // No library was chosen
-        if (typeof (libraryName) === 'undefined') {
+        if (typeof(libraryName) === 'undefined') {
           return reject('No library was chosen');
         }
 
@@ -273,7 +273,7 @@ let activate = (context) => {
       }).then((asset) => {
 
         // No version was chosen
-        if (typeof (asset) === 'undefined') {
+        if (typeof(asset) === 'undefined') {
           return reject('No library version was chosen');
         }
 
@@ -303,7 +303,7 @@ let activate = (context) => {
       }).then((file) => {
 
         // No file was chosen
-        if (typeof (file) === 'undefined') {
+        if (typeof(file) === 'undefined') {
           return reject('No library file was chosen');
         }
 
@@ -435,7 +435,7 @@ let activate = (context) => {
         }).then((action) => {
 
           // No action was chosen
-          if (typeof (action) === 'undefined') {
+          if (typeof(action) === 'undefined') {
             return reject('No action was chosen');
           }
 
@@ -458,7 +458,7 @@ let activate = (context) => {
     let textEditor = vscode.window.activeTextEditor;
 
     // Ignore if no active TextEditor
-    if (typeof (textEditor) === 'undefined') {
+    if (typeof(textEditor) === 'undefined') {
       return false;
     }
 
