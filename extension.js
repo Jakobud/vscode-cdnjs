@@ -575,17 +575,28 @@ let activate = (context) => {
         });
       }
 
+      // Clear recent libraries command
+      items.push({
+        label: 'Clear recent libraries list',
+        clear: true
+      });
+
       // Show quick pick of recent libraries
       vscode.window.showQuickPick(items, {
         placeHolder: 'Choose a recent library'
-      }).then((library) => {
+      }).then((value) => {
 
         // No recent library was chosen
-        if (typeof (library) === 'undefined') {
+        if (typeof(value) === 'undefined') {
           return reject('No library was chosen');
         }
 
-        resolve(library.asset);
+        if (value.clear === true) {
+          recentLibraries.clear();
+          return true;
+        }
+
+        resolve(value.asset);
 
       }, (err) => {
         reject(err);
