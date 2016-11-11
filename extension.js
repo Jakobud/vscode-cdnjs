@@ -6,7 +6,7 @@ let open = null;
 let got = null;
 const Promise = require('bluebird');
 const RecentLibraries = require('./RecentLibraries');
-const Cache = require('./Cache');
+const Cache = require('vscode-cache');
 
 let activate = (context) => {
 
