@@ -52,16 +52,18 @@
         ],
         "configuration": {
             "type": "object",
-            "title": "cdnjs.com configuration",
+            "title": "cdnjs.com",
             "properties": {
                 "cdnjs.quoteStyle": {
                     "type": "string",
                     "default": "single",
+                    "enum": ["single", "double"],
                     "description": "Quote style for HTML tags. Possible values are 'single' or 'double'"
                 },
                 "cdnjs.protocol": {
                     "type": "string",
                     "default": "https://",
+                    "enum": ["https://", "http://", "//"],
                     "description": "Protocol for urls in HTML tags. Possible values are 'https://', 'http://' or '//'"
                 },
                 "cdnjs.maxRecentLibraries": {
