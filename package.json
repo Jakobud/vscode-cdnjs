@@ -52,7 +52,7 @@
         ],
         "configuration": {
             "type": "object",
-            "title": "cdnjs.com",
+            "title": "cdnjs",
             "properties": {
                 "cdnjs.quoteStyle": {
                     "type": "string",
