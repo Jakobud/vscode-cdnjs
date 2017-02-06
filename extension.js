@@ -15,21 +15,15 @@ let activate = (context) => {
   const embedUrl = 'cdnjs.cloudflare.com/ajax/libs';
   const httpRequestTimeout = 5000; // 5 seconds
   const statusBarMessageTimeout = 5000; // 5 seconds
-  const cacheTimeDefault = 21600 // 6 hours
 
   // Quote configuration values
-  const quotes = {
+  const quoteStyles = {
     'single': "'",
     'double': '"'
   };
-  const quoteDefault = "'";
 
   // Protocol configuration values
   const protocols = ['https://', 'http://', '//'];
-  const protocolDefault = 'https://';
-
-  // Maximum Recent Libraries configuration values
-  const maxRecentLibrariesDefault = 10;
 
   // Recent Libraries interface
   let recentLibraries = new RecentLibraries(context, vscode.workspace);
@@ -109,7 +103,7 @@ let activate = (context) => {
 
         // Fetch the cache time setting
         let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
-        cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
+        cacheTime = Number.isInteger(cacheTime) ? cacheTime : config.inspect('cacheTime').defaultValue;
 
         // Save the result to cache and resolve the search result
         searchCache.put(term, body.results, cacheTime)
@@ -217,7 +211,7 @@ let activate = (context) => {
 
         // Fetch the catch time setting
         let cacheTime = vscode.workspace.getConfiguration('cdnjs').get('cacheTime');
-        cacheTime = Number.isInteger(cacheTime) ? cacheTime : cacheTimeDefault;
+        cacheTime = Number.isInteger(cacheTime) ? cacheTime : config.inspect('cacheTime').defaultValue;
 
         // Save the result to cache and resolving the search result
         libraryCache.put(libraryName, body, cacheTime)
@@ -331,11 +325,11 @@ let activate = (context) => {
       const config = vscode.workspace.getConfiguration('cdnjs');
 
       // Determine the quote style from configuration
-      const quote = quotes[config.get('quoteStyle')] || quoteDefault;
+      const quote = quoteStyles[config.get('quoteStyle')] || quoteStyles[config.inspect('quoteStyle').defaultValue];
 
       // Determine url protocol
       const protocolConfig = config.get('protocol');
-      const protocol = protocols.indexOf(protocolConfig) >= 0 ? protocolConfig : protocolDefault;
+      const protocol = protocols.indexOf(protocolConfig) >= 0 ? protocolConfig : config.inspect('protocol').defaultValue;
 
       // Build the url for the file
       let url = protocol + embedUrl + '/' + chosen.library + '/' + chosen.version + '/' + chosen.file;
