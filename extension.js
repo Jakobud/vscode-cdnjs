@@ -82,11 +82,17 @@ let activate = (context) => {
       // Lazy load got
       got = require('got');
 
+      // Get the http configuration settings
+      const http = vscode.workspace.getConfiguration('http')
+
       // Search for libraries
       got(searchUrl + '&search=' + term, {
         json: true,
-        timeout: httpRequestTimeout
+        timeout: httpRequestTimeout,
+        rejectUnauthorized: http.get('proxyStrictSSL')
       }).then((res) => {
+
+        console.log(res.headers)
 
         // Reject non-200 status code responses
         if (res.statusCode !== 200) {
@@ -190,10 +196,14 @@ let activate = (context) => {
       // Lazy load got
       got = require('got');
 
+      // Get the http configuration settings
+      const http = vscode.workspace.getConfiguration('http')
+
       // Request library versions
       got(baseUrl + '/' + libraryName, {
         json: true,
-        timeout: httpRequestTimeout
+        timeout: httpRequestTimeout,
+        rejectUnauthorized: http.get('proxyStrictSSL')
       }).then((res) => {
 
         // Reject non-200 status code responses
