@@ -92,8 +92,6 @@ let activate = (context) => {
         rejectUnauthorized: http.get('proxyStrictSSL')
       }).then((res) => {
 
-        console.log(res.headers)
-
         // Reject non-200 status code responses
         if (res.statusCode !== 200) {
           return reject(res.body);
