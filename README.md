@@ -66,4 +66,10 @@ This extension uses the cdnjs.com API to search for libraries that are hosted on
 - The length of time (in seconds) to cache library and search results
 - Default: `21600` (6 hours)
 
+---
+
+This extension will obey VSCode's `http.proxyStrictSSL` setting when making SSL-enabled API calls to cdnjs.com.
+
+---
+
 *Disclaimer: This extension is not affiliated with cdnjs.com in any way. It simply utilizes the publically available cdnjs.com API order to search for and fetch libraries from cdnjs.com. All cdnjs.com imagery is property of it's respective owners.*
