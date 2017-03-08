@@ -2,7 +2,7 @@
     "name": "vscode-cdnjs",
     "displayName": "cdnjs",
     "description": "Search and embed libraries from cdnjs.com in Visual Studio Code",
-    "version": "0.14.2",
+    "version": "0.14.3",
     "publisher": "JakeWilson",
     "author": "Jake Wilson",
     "license": "MIT",
