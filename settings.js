@@ -16,4 +16,19 @@ settings.quoteStyles = {
 }
 settings.protocols = ['https://', 'http://', '//']
 
+settings.searchPlaceholders = [
+  'jquery',
+  'bootstrap',
+  'angular',
+  'react',
+  'leaflet',
+  'backbone',
+  'd3',
+  'ember',
+  'slick',
+  'knockout',
+  'lodash',
+  'vue'
+]
+
 module.exports = settings
