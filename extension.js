@@ -1,7 +1,6 @@
 'use strict'
 
 const vscode = require('vscode')
-const Promise = require('bluebird')
 const RecentLibraries = require('./RecentLibraries')
 const Cache = require('vscode-cache')
 
@@ -27,100 +26,108 @@ let activate = context => {
   let searchCache = new Cache(context, 'search')
   let libraryCache = new Cache(context, 'library')
 
-  vscode.commands.registerCommand('cdnjs.search', () => {
-    // The chosen file
-    let chosen = {}
+  vscode.commands.registerCommand('cdnjs.search', async () => {
+    // Get a search term
+    let term = await showSearchInput()
+    if (typeof term === 'undefined' || term === '') {
+      const message = `cdnjs: No search term specified`
+      vscode.window.showWarningMessage(message)
+      console.debug(message)
+      return
+    }
 
-    showSearchInput().then((value) => {
-      return search(value)
-    }).then((results) => {
-      return showLibraryPicker(results)
-    }).then((library) => {
-      chosen.library = library.name
+    // Perform the search on the API
+    let results = await search(term)
+    if (results.length === false) {
+      return
+    }
 
-      return getLibrary(library.name)
-    }).then((library) => {
-      return showLibraryVersionPicker(library)
-    }).then((asset) => {
-      chosen.version = asset.version
+    // Pick a library from the search results
+    let library = await showLibraryPicker(results)
+    if (library === false) {
+      return
+    }
 
-      recentLibraries.add(asset)
+    // Fetch the library information from the API
+    library = await getLibrary(library.name)
 
-      return showFilePicker(asset)
-    }).then((file) => {
-      chosen.file = file
+    // Pick a version from the library versions
+    let asset = await showLibraryVersionPicker(library)
 
-      return showActionPicker(chosen)
-    }).catch((err) => {
-      console.error(err)
-    })
+    // Add the library version to the list of recent libraries
+    recentLibraries.add(asset)
+
+    // Pick the file
+    let file = await showFilePicker(asset)
+
+    let chosenFile = {
+      library: library.name,
+      version: asset.version,
+      file: file
+    }
+
+    // Pick the action to take on the file
+    showActionPicker(chosenFile)
   })
 
-  vscode.commands.registerCommand('cdnjs.recentLibraries', () => {
+  vscode.commands.registerCommand('cdnjs.recentLibraries', async () => {
     // No Recent Libraries found
     if (recentLibraries.get().length < 1) {
       // Offer search instead
-      return vscode.window.showInformationMessage('No Recent Libraries. Do you want to search instead?', 'Yes')
-        .then((value) => {
-          if (value === 'Yes') {
-            vscode.commands.executeCommand('cdnjs.search')
-          }
-        }, (err) => {
-          console.error(err)
-        })
+      let value = await vscode.window.showInformationMessage('cdnjs: No Recent Libraries. Do you want to search instead?', 'Yes', 'No')
+      if (value === 'Yes') {
+        vscode.commands.executeCommand('cdnjs.search')
+      }
+      return
     }
 
     let chosen = {}
 
-    new Promise((resolve, reject) => {
-      // Build array of recent libraries
-      let items = []
-      for (let library of recentLibraries.get()) {
-        items.push({
-          label: library.libraryName + '/' + library.version,
-          asset: library
-        })
-      }
-
-      // Clear recent libraries command
+    // Build array of recent libraries
+    let items = []
+    for (let library of recentLibraries.get()) {
       items.push({
-        label: 'Clear recent libraries list',
-        clear: true
+        label: library.libraryName + '/' + library.version,
+        asset: library
       })
+    }
 
-      // Show quick pick of recent libraries
-      vscode.window.showQuickPick(items, {
-        placeHolder: 'Choose a recent library'
-      }).then((value) => {
-        // No recent library was chosen
-        if (typeof (value) === 'undefined') {
-          return reject(new Error('No library was chosen!!!'))
-        }
-
-        if (value.clear === true) {
-          recentLibraries.clear()
-          return true
-        }
-
-        resolve(value.asset)
-      }, (err) => {
-        reject(err)
-      })
-    }).then((asset) => {
-      // Set the chosen file's library and version'
-      chosen.library = asset.libraryName
-      chosen.version = asset.version
-
-      recentLibraries.add(asset)
-
-      return showFilePicker(asset)
-    }).then((file) => {
-      chosen.file = file
-
-      return showActionPicker(chosen)
-    }).catch((err) => {
-      console.error(err)
+    // Clear recent libraries command
+    items.push({
+      label: 'Clear recent libraries list',
+      clear: true
     })
+
+    // Show quick pick of recent libraries
+    let value = await vscode.window.showQuickPick(items, {
+      placeHolder: 'Choose a recent library'
+    })
+
+    // No recent library was chosen
+    if (typeof (value) === 'undefined') {
+      console.error(`No library was chosen`)
+      return
+    }
+
+    // Clear recent libraries list
+    if (value.clear === true) {
+      recentLibraries.clear()
+      return true
+    }
+
+    let asset = value.asset
+
+    // Set the chosen file's library and version'
+    chosen.library = asset.libraryName
+    chosen.version = asset.version
+
+    recentLibraries.add(asset)
+
+    let file = await showFilePicker(asset)
+
+    chosen.file = file
+
+    showActionPicker(chosen)
   })
 
   vscode.commands.registerCommand('cdnjs.clearCache', () => {
