@@ -29,10 +29,7 @@ let activate = context => {
   vscode.commands.registerCommand('cdnjs.search', async () => {
     // Get a search term
     let term = await showSearchInput()
-    if (typeof term === 'undefined' || term === '') {
-      const message = `cdnjs: No search term specified`
-      vscode.window.showWarningMessage(message)
-      console.debug(message)
+    if (!term) {
       return
     }
 
@@ -53,12 +50,18 @@ let activate = context => {
 
     // Pick a version from the library versions
     let asset = await showLibraryVersionPicker(library)
+    if (!asset) {
+      return
+    }
 
     // Add the library version to the list of recent libraries
     recentLibraries.add(asset)
 
     // Pick the file
     let file = await showFilePicker(asset)
+    if (!file) {
+      return
+    }
 
     let chosenFile = {
       library: library.name,
