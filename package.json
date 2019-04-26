@@ -30,7 +30,7 @@
         "onCommand:cdnjs.recentLibraries",
         "onCommand:cdnjs.clearCache"
     ],
-    "icon": "images/icon.svg",
+    "icon": "images/icon.png",
     "main": "./extension.js",
     "contributes": {
         "commands": [
