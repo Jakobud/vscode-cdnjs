@@ -66,7 +66,8 @@ let activate = context => {
     let chosenFile = {
       library: library.name,
       version: asset.version,
-      file: file
+      file: file,
+      sri: asset.sri[file]
     }
 
     // Pick the action to take on the file
@@ -123,12 +124,14 @@ let activate = context => {
     // Set the chosen file's library and version'
     chosen.library = asset.libraryName
     chosen.version = asset.version
-
+    
     recentLibraries.add(asset)
-
+    
+    // Pick the file from the library version
     let file = await showFilePicker(asset)
-
+    
     chosen.file = file
+    chosen.sri = asset.sri[file]
 
     showActionPicker(chosen)
   })

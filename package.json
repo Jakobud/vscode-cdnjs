@@ -82,6 +82,16 @@
                     "type": "integer",
                     "default": 21600,
                     "description": "The length of time (in seconds) to cache library and search results"
+                },
+                "cdnjs.integrity": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Include integrity attribute (SRI) in script and link tags"
+                },
+                "cdnjs.crossorigin": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Include crossorigin attribute in script and link tags"
                 }
             }
         }
