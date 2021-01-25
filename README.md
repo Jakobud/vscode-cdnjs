@@ -15,6 +15,7 @@ This extension uses the cdnjs.com API to search for libraries that are hosted on
 - Copy urls, `<script>` and `<link>` tags to your system clipboard
 - Open any file url in your browser
 - Choose from a list of your most recently used libraries
+- Includes Subresource Integrity and Crossorigin attributes in `<script>` and `<link>` tags
 
 ---
 ## Recent Libraries
@@ -66,6 +67,16 @@ This extension uses the cdnjs.com API to search for libraries that are hosted on
 
 - The length of time (in seconds) to cache library and search results
 - Default: `21600` (6 hours)
+
+### `cdnjs.integrity`
+
+- Include integrity attribute (SRI) in script and link tags
+- Default: true
+
+### `cdnjs.crossorigin`
+
+- Include crossorigin attribute in script and link tags
+- Default: true
 
 ---
 
