@@ -100,7 +100,7 @@
         "vscode": "^1.1.33"
     },
     "dependencies": {
-        "got": "^9.6.0",
+        "got": "^11.8.5",
         "open": "^6.2.0",
         "vscode-cache": "^0.3.0"
     }
