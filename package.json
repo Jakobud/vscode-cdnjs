@@ -7,7 +7,7 @@
     "author": "Jake Wilson",
     "license": "MIT",
     "engines": {
-        "vscode": "^1.0.0"
+        "vscode": "^1.96.0"
     },
     "categories": [
         "Other"
@@ -25,11 +25,7 @@
         "url": "https://github.com/Jakobud/vscode-cdnjs/issues"
     },
     "homepage": "https://github.com/Jakobud/vscode-cdnjs",
-    "activationEvents": [
-        "onCommand:cdnjs.search",
-        "onCommand:cdnjs.recentLibraries",
-        "onCommand:cdnjs.clearCache"
-    ],
+    "activationEvents": [],
     "icon": "images/icon.png",
     "main": "./extension.js",
     "contributes": {
@@ -97,11 +93,27 @@
         }
     },
     "devDependencies": {
-        "vscode": "^1.1.33"
+        "@types/vscode": "^1.96.0",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "20.x",
+        "@typescript-eslint/eslint-plugin": "^8.17.0",
+        "@typescript-eslint/parser": "^8.17.0",
+        "eslint": "^9.16.0",
+        "typescript": "^5.7.2",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.4.1"
     },
     "dependencies": {
         "got": "^9.6.0",
         "open": "^6.2.0",
         "vscode-cache": "^0.3.0"
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src",
+        "test": "vscode-test"
     }
 }
