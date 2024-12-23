@@ -32,7 +32,7 @@ module.exports = async chosen => {
 
   // Determine if integrity attribute is used
   const integrity = config.get('integrity') === true ? ` integrity=${quote}${chosen.sri}${quote}` : ''
-  
+
   // Determine if crossorigin attribute is used
   const crossorigin = config.get('crossorigin') === true ? ` crossorigin=${quote}anonymous${quote}` : ''
 
