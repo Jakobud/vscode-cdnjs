@@ -18,4 +18,8 @@
     "include": [
         "src/**/*"
     ],
+    "exclude": [
+        "node_modules",
+        "../vscode-cache/node_modules"
+    ]
 }
