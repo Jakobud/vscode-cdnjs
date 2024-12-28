@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
-const vscode = require('vscode')
+import vscode from 'vscode';
 
-const statusMessage = require('./statusMessage')
+import statusMessage from './statusMessage';
 
 // Show picker of all libraries
-module.exports = async results => {
+export default async results => {
   // Build array of libraries
-  let items = []
+  let items = [];
   for (let result of results) {
     // Create QuickPickItem for library
     let item = {
@@ -15,22 +15,22 @@ module.exports = async results => {
       description: result.description,
       currentVersion: result.version,
       name: result.name
-    }
-    items.push(item)
+    };
+    items.push(item);
   }
 
   // Update status bar message
-  statusMessage(`cdnjs: Found ${items.length} libraries`)
+  statusMessage(`cdnjs: Found ${items.length} libraries`);
 
   // Show QuickPick of search results
   let library = await vscode.window.showQuickPick(items, {
     placeHolder: `Choose a library (${items.length} results)`,
     matchOnDescription: true
-  })
+  });
 
   if (typeof library === 'undefined') {
-    return false
+    return false;
   }
 
-  return library
-}
+  return library;
+};

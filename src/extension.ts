@@ -1,25 +1,21 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import Cache from 'vscode-cache';
 
-// const vscode = require('vscode')
-const RecentLibraries = require('./RecentLibraries');
-const Cache = require('vscode-cache');
-
-
-
-const search = require('./lib/search');
-const statusMessage = require('./lib/statusMessage');
-const showSearchInput = require('./lib/showSearchInput');
-const showLibraryPicker = require('./lib/showLibraryPicker');
-const getLibrary = require('./lib/getLibrary');
-const showLibraryVersionPicker = require('./lib/showLibraryVersionPicker');
-const showFilePicker = require('./lib/showFilePicker');
-const showActionPicker = require('./lib/showActionPicker');
-
-const settings = require('./settings');
+import RecentLibraries from './RecentLibraries';
+import search from './lib/search';
+import statusMessage from './lib/statusMessage';
+import showSearchInput from './lib/showSearchInput';
+import showLibraryPicker from './lib/showLibraryPicker';
+import getLibrary from './lib/getLibrary';
+import showLibraryVersionPicker from './lib/showLibraryVersionPicker';
+import showFilePicker from './lib/showFilePicker';
+import showActionPicker from './lib/showActionPicker';
+import settings from './settings';
 
 export function activate(context: vscode.ExtensionContext) {
+
   // Save the context for use in other modules
   settings.context = context;
 
@@ -89,7 +85,13 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    let chosen = {};
+    interface Chosen {
+      library: string;
+      version: string;
+      file: string;
+      sri: string;
+    }
+    let chosen: Chosen = {} as Chosen;
 
     // Build array of recent libraries
     let items = [];

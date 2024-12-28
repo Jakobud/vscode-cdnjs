@@ -1,20 +1,21 @@
-'use strict'
+'use strict';
 
-const vscode = require('vscode')
+import vscode from 'vscode';
 
-let settings = {}
+let settings = {};
 
-settings.baseUrl = 'https://api.cdnjs.com/libraries'
-settings.searchUrl = settings.baseUrl + '?fields=version,description,homepage'
-settings.embedUrl = 'cdnjs.cloudflare.com/ajax/libs'
-settings.httpRequestTimeout = 5000
-settings.statusBarMessageTimeout = 5000
-settings.config = vscode.workspace.getConfiguration('cdnjs')
+settings.baseUrl = 'https://api.cdnjs.com/libraries';
+settings.searchUrl = settings.baseUrl + '?fields=version,description,homepage';
+settings.embedUrl = 'cdnjs.cloudflare.com/ajax/libs';
+settings.httpRequestTimeout = 5000;
+settings.statusBarMessageTimeout = 5000;
+settings.config = vscode.workspace.getConfiguration('cdnjs');
 settings.quoteStyles = {
   'single': "'",
   'double': '"'
-}
-settings.protocols = ['https://', 'http://', '//']
+};
+settings.protocols = ['https://', 'http://', '//'];
+settings.context = null;
 
 settings.searchPlaceholders = [
   'jquery',
@@ -29,6 +30,6 @@ settings.searchPlaceholders = [
   'knockout',
   'lodash',
   'vue'
-]
+];
 
-module.exports = settings
+export default settings;

@@ -1,14 +1,12 @@
 'use strict';
 
-const vscode = require('vscode');
-const Cache = require('vscode-cache');
+import vscode from 'vscode';
+import Cache from 'vscode-cache';
 
-// const statusMessage = require('./statusMessage')
-
-const settings = require('../settings');
+import settings from '../settings';
 
 // Perform search on cdnjs.com and return JSON results
-module.exports = async term => {
+const search = async term => {
   term = term.trim();
 
   // Ignore empty searches
@@ -72,3 +70,5 @@ module.exports = async term => {
     return res.body.results;
   });
 };
+
+export default search;

@@ -1,21 +1,21 @@
-'use strict'
+'use strict';
 
-const vscode = require('vscode')
+import vscode from 'vscode';
 
-const settings = require('../settings')
+import settings from '../settings';
 
 // Display search box and return input
-module.exports = async () => {
+export default async () => {
   let term = await vscode.window.showInputBox({
     placeHolder: `Example: ${settings.searchPlaceholders[Math.floor(Math.random() * settings.searchPlaceholders.length)]}`,
     prompt: 'Search for a script or library'
-  })
+  });
 
-  term = term.trim()
+  term = term.trim();
 
   if (typeof term === 'undefined' || term === '') {
-    return false
+    return false;
   }
 
-  return term
-}
+  return term;
+};
