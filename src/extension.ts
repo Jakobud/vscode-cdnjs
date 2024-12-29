@@ -28,13 +28,16 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand('cdnjs.search', async () => {
     // Get a search term
-    let term = await showSearchInput();
-    if (!term) {
+    const searchPlaceholder = settings.searchPlaceholders[Math.floor(Math.random() * settings.searchPlaceholders.length)];
+    const searchTerm = showSearchInput(searchPlaceholder);
+
+    // No search term was provided
+    if (!searchTerm) {
       return;
     }
 
     // Perform the search on the API
-    let results = await search(term);
+    let results = await search(searchTerm);
     if (results.length === false) {
       return;
     }

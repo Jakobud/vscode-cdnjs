@@ -2,15 +2,22 @@
 
 import * as vscode from 'vscode';
 
-import settings from '../settings';
-
-// Display search box and return input
-export default async () => {
+/**
+ * Displays a search input box to the user and returns the entered search term.
+ *
+ * @returns {string | false} A promise that resolves to the trimmed search term entered by the user,
+ * or `false` if no search term was provided.
+ */
+const showSearchInput = (placeholder: string): string | false => {
   // Show a search input box and get the result
-  let term = await vscode.window.showInputBox({
-    placeHolder: `Example: ${settings.searchPlaceholders[Math.floor(Math.random() * settings.searchPlaceholders.length)]}`,
-    prompt: 'Search for a script or library'
-  });
+  let term: string | undefined;
+
+  (async () => {
+    term = await vscode.window.showInputBox({
+      placeHolder: `Example: ${placeholder}`,
+      prompt: 'Search for a script or library'
+    });
+  })();
 
   // If no search term is provided, return false
   if (typeof term === 'undefined' || term === '') {
@@ -20,3 +27,5 @@ export default async () => {
   // Trim the search term and return it
   return term.trim();
 };
+
+export default showSearchInput;
