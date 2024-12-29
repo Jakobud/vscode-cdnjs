@@ -1,6 +1,6 @@
 'use strict';
 
-import vscode from 'vscode';
+import * as vscode from 'vscode';
 import Cache from 'vscode-cache';
 
 import settings from '../settings';

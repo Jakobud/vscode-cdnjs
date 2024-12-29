@@ -1,6 +1,6 @@
 'use strict';
 
-import vscode from 'vscode';
+import * as vscode from 'vscode';
 import path from 'path';
 
 import insertText from './insertText';

@@ -1,6 +1,6 @@
 'use strict';
 
-import vscode from 'vscode';
+import * as vscode from 'vscode';
 import settings from '../settings';
 
 // Set consistent status bar message using timeout with either promise or time in milliseconds

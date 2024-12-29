@@ -1,6 +1,6 @@
 'use strict';
 
-import vscode from 'vscode';
+import * as vscode from 'vscode';
 
 // Insert text into active document at cursor positions
 export default async text => {

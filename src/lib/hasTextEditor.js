@@ -1,6 +1,6 @@
 'use strict';
 
-import vscode from 'vscode';
+import * as vscode from 'vscode';
 
 // Determine if there is an active text editor that is not part of the output panel
 export default () => {
