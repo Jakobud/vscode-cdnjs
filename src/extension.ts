@@ -28,8 +28,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand('cdnjs.search', async () => {
     // Get a search term
-    const searchPlaceholder = settings.searchPlaceholders[Math.floor(Math.random() * settings.searchPlaceholders.length)];
-    const searchTerm = showSearchInput(searchPlaceholder);
+    const searchPlaceholder = `Example: ${settings.searchPlaceholders[Math.floor(Math.random() * settings.searchPlaceholders.length)]}`;
+    const searchPrompt = `Search for a script or library`;
+    const searchTerm = await showSearchInput(searchPlaceholder, searchPrompt) as string | false;
 
     // No search term was provided
     if (!searchTerm) {

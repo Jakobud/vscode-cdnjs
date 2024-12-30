@@ -3,29 +3,25 @@
 import * as vscode from 'vscode';
 
 /**
- * Displays a search input box to the user and returns the entered search term.
+ * Displays a search input box with a specified placeholder and prompt.
  *
- * @returns {string | false} A promise that resolves to the trimmed search term entered by the user,
- * or `false` if no search term was provided.
+ * @param placeholder - The placeholder text to display in the input box.
+ * @param prompt - The prompt message to display above the input box.
+ * @returns A promise that resolves to the entered search term as a string,
+ *          or `false` if no search term is provided.
  */
-const showSearchInput = (placeholder: string): string | false => {
-  // Show a search input box and get the result
-  let term: string | undefined;
-
-  (async () => {
-    term = await vscode.window.showInputBox({
-      placeHolder: `Example: ${placeholder}`,
-      prompt: 'Search for a script or library'
-    });
-  })();
+const showSearchInput = async (placeholder: string, prompt: string) => {
+  const searchTerm = await vscode.window.showInputBox({
+    placeHolder: placeholder,
+    prompt: prompt,
+  });
 
   // If no search term is provided, return false
-  if (typeof term === 'undefined' || term === '') {
+  if (typeof searchTerm === 'undefined' || searchTerm === '') {
     return false;
   }
 
-  // Trim the search term and return it
-  return term.trim();
+  return searchTerm;
 };
 
 export default showSearchInput;
