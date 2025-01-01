@@ -107,7 +107,7 @@
         "@vscode/test-electron": "^2.4.1"
     },
     "dependencies": {
-        "got": "^9.6.0",
+        "got": "^14.4.5",
         "open": "^6.2.0",
         "vscode-cache": "github:jakobud/vscode-cache#develop"
     },

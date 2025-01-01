@@ -4,12 +4,14 @@ import * as vscode from 'vscode';
 import Cache from 'vscode-cache';
 
 import RecentLibraries from './RecentLibraries';
-import search from './lib/search';
 import statusMessage from './lib/statusMessage';
+
 import showSearchInput from './lib/showSearchInput';
+import search from './lib/search';
 import showLibraryPicker from './lib/showLibraryPicker';
 import getLibrary from './lib/getLibrary';
 import showLibraryVersionPicker from './lib/showLibraryVersionPicker';
+
 import showFilePicker from './lib/showFilePicker';
 import showActionPicker from './lib/showActionPicker';
 import settings from './settings';
@@ -26,9 +28,11 @@ export function activate(context: vscode.ExtensionContext) {
   let searchCache = new Cache(context, 'search');
   let libraryCache = new Cache(context, 'library');
 
+  const searchPlaceholdersLength = settings.searchPlaceholders.length;
+
   vscode.commands.registerCommand('cdnjs.search', async () => {
     // Get a search term
-    const searchPlaceholder = `Example: ${settings.searchPlaceholders[Math.floor(Math.random() * settings.searchPlaceholders.length)]}`;
+    const searchPlaceholder = `Example: ${settings.searchPlaceholders[Math.floor(Math.random() * searchPlaceholdersLength)]}`;
     const searchPrompt = `Search for a script or library`;
     const searchTerm = await showSearchInput(searchPlaceholder, searchPrompt) as string | false;
 
@@ -38,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     // Perform the search on the API
-    let results = await search(searchTerm);
+    const results = await search(searchTerm);
     if (results.length === false) {
       return;
     }
