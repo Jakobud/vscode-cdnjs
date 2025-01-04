@@ -3,25 +3,12 @@
 import * as vscode from 'vscode';
 import Cache from 'vscode-cache';
 import got from 'got';
+import { LibrarySearchResult } from '../interfaces';
 
 import settings from '../settings.js';
 
-// A single library search result
-interface Result {
-  name: string;
-  description: string;
-  latest: string;
-}
-
-// The search results
-interface Data {
-  available: number
-  results: Result[]
-  total: number
-}
-
 // Perform search on cdnjs.com and return JSON results
-const search = async (term: string) => {
+export default async (term: string) => {
   term = term.trim();
 
   // Ignore empty searches
@@ -53,9 +40,14 @@ const search = async (term: string) => {
     const http: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('http');
 
     // Search for libraries
-    let data: Data;
+    let librarySearchResults: {
+      results: LibrarySearchResult[];
+      available: number;
+      total: number;
+    };
+
     try {
-      data = await got(`${settings.baseUrl}?search=${term}&fields=name,description`, {
+      librarySearchResults = await got(`${settings.baseUrl}?search=${term}&fields=name,description,latest`, {
         timeout: { request: settings.httpRequestTimeout },
         https: { rejectUnauthorized: http.get('proxyStrictSSL') },
       }).json();
@@ -68,14 +60,16 @@ const search = async (term: string) => {
       return false;
     }
 
+    console.debug(librarySearchResults);
+
     // Display error message if no results were found
-    if (!data.results || data.results.length === 0) {
+    if (!librarySearchResults.results || librarySearchResults.results.length === 0) {
       const message = `cdnjs: Search for "${term}" yielded no results`;
       vscode.window.showInformationMessage(message);
       return false;
     }
 
-    const results: Result[] = data.results;
+    const results: LibrarySearchResult[] = librarySearchResults.results;
 
     // Cache search results
     const cacheTime: number | undefined = vscode.workspace.getConfiguration('cdnjs').get<number>('cacheTime');
@@ -84,5 +78,3 @@ const search = async (term: string) => {
     return results;
   });
 };
-
-export default search;

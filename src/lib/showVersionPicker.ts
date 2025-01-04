@@ -3,10 +3,11 @@
 import * as vscode from 'vscode';
 
 // Show library version picker
-export default async library => {
+export default async (versions: string[]) => {
+
   // Build array of library versions
   let items = [];
-  for (let asset of library.assets) {
+  for (let version of versions) {
     // QuickPickItem for the library version
     let item = {
       label: asset.version,

@@ -4,26 +4,26 @@ import * as vscode from 'vscode';
 
 import statusMessage from './statusMessage';
 
+import { LibrarySearchResult, Library, QuickPickItem } from '../interfaces';
+
 // Show picker of all libraries
-export default async results => {
+export default async (libraries: LibrarySearchResult[]) => {
   // Build array of libraries
-  let items = [];
-  for (let result of results) {
+  const items: QuickPickItem[] = [];
+
+  for (let library of libraries) {
     // Create QuickPickItem for library
-    let item = {
-      label: result.name,
-      description: result.description,
-      currentVersion: result.version,
-      name: result.name
-    };
-    items.push(item);
+    items.push({
+      label: library.name,
+      description: library.description
+    });
   }
 
   // Update status bar message
   statusMessage(`cdnjs: Found ${items.length} libraries`);
 
   // Show QuickPick of search results
-  let library = await vscode.window.showQuickPick(items, {
+  const library: Library | undefined = await vscode.window.showQuickPick(items, {
     placeHolder: `Choose a library (${items.length} results)`,
     matchOnDescription: true
   });
@@ -31,6 +31,8 @@ export default async results => {
   if (typeof library === 'undefined') {
     return false;
   }
+
+  console.debug(library);
 
   return library;
 };

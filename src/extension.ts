@@ -7,14 +7,15 @@ import RecentLibraries from './RecentLibraries';
 import statusMessage from './lib/statusMessage';
 
 import showSearchInput from './lib/showSearchInput';
-import search from './lib/search';
+import searchLibraries from './lib/searchLibraries';
 import showLibraryPicker from './lib/showLibraryPicker';
-import getLibrary from './lib/getLibrary';
-import showLibraryVersionPicker from './lib/showLibraryVersionPicker';
+import searchVersions from './lib/searchVersions';
+import showVersionPicker from './lib/showVersionPicker';
 
 import showFilePicker from './lib/showFilePicker';
 import showActionPicker from './lib/showActionPicker';
 import settings from './settings';
+import { LibrarySearchResults, LibrarySearchResult, Library } from './interfaces';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -34,31 +35,35 @@ export function activate(context: vscode.ExtensionContext) {
     // Get a search term
     const searchPlaceholder = `Example: ${settings.searchPlaceholders[Math.floor(Math.random() * searchPlaceholdersLength)]}`;
     const searchPrompt = `Search for a script or library`;
-    const searchTerm = await showSearchInput(searchPlaceholder, searchPrompt) as string | false;
+    const searchTerm: string | false = await showSearchInput(searchPlaceholder, searchPrompt) as string | false;
 
     // No search term was provided
     if (!searchTerm) {
       return;
     }
 
-    // Perform the search on the API
-    const results = await search(searchTerm);
-    if (results.length === false) {
+    // Search for libraries using the API
+    let libraries: LibrarySearchResult[] | false = await searchLibraries(searchTerm);
+    if (libraries === false) {
       return;
     }
 
     // Pick a library from the search results
-    let library = await showLibraryPicker(results);
+    const library: Library | false = await showLibraryPicker(libraries);
     if (library === false) {
       return;
     }
 
-    // Fetch the library information from the API
-    library = await getLibrary(library.name);
+    library.name = libraryName;
+
+    // Fetch the library versions from the API
+    const versions = await searchVersions(library.name);
+
+    console.debug(versions);
 
     // Pick a version from the library versions
-    let asset = await showLibraryVersionPicker(library);
-    if (!asset) {
+    const version = await showVersionPicker(versions);
+    if (!version) {
       return;
     }
 
